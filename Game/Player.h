@@ -10,6 +10,12 @@ private:
 	//Sprite and Textures player
 	sf::Sprite playersprite;
 	sf::Texture playertexture;
+	sf::RectangleShape rectangle;
+	
+	float movementSpeed;
+
+	float attackcooldown;
+	float attackcooldownMax;
 
 	//Animation 
 	sf::Clock animatetimer; //to set animation time 
@@ -27,11 +33,15 @@ private:
 	float gravity;
 	float velocityMaxY;
 
+	//hp variables
+	int hp;
+	int hpMax;
+
 
 
 	//Function
 	void initVariables();
-
+	
 	//player texture and sprite function
 	void initTexture();
 	void initSprite();
@@ -47,17 +57,25 @@ public:
 
 	//Accessore
 	const bool& getAnimSwitch();
-	const sf::FloatRect getGlobalBounds() const;
-	const sf::Vector2f getPosition() const;
+
+	const sf::FloatRect getBounds() const;
 
 	//Modifiers
 	void setPosition(const float x, const float y);
 	void resetVelocityY();
 
+	//accessor
+	const sf::Vector2f& getpos() const;
 
 	void resetAnimationTimer();
-	void move(const float dir_x,const float dir_y);
 	void updatePhysics();
+
+	//Hp functions
+	const int& getHp() const;
+	const int& getHpMax() const;
+
+	void setHp(const int hp);
+	void loseHp(const int value);
 	
 	//Movement Update
 	void updatemovement();
@@ -66,9 +84,10 @@ public:
 	bool jumping = false;
 	bool jumpingUp = false;
 	bool gravityBool = false;
-
+	const bool canAttack();
 
 	//Player update and render
+	void updateAttack();
 	void updated();
 	void render(sf::RenderTarget& target);
 };

@@ -2,7 +2,15 @@
 //for variables
 void Player::initVariables()
 {
+	
 	this->animState = PlAYER_ANIMATION_STATES::IDLE;
+	this->movementSpeed = 2.f;
+	this->attackcooldownMax = 30.f;
+	this->attackcooldown = this->attackcooldownMax;
+
+	//player hp
+	this->hpMax = 100;
+	this->hp = this->hpMax;
 }
 
 //include picture from files
@@ -17,9 +25,12 @@ void Player::initSprite()
 	this->playersprite.setTexture(this->playertexture);
 	this->currentFrame = sf::IntRect(0, 0, 620, 800);
 	this->playersprite.setTextureRect(sf::IntRect(this->currentFrame));
-	this->playersprite.setScale(0.2f, 0.2f);
+	this->playersprite.setScale(0.3f, 0.3f);
 	this->playerposition = sf::Vector2f(12, 13);
 	this->playersprite.setPosition(sf::Vector2f(this->playerposition));
+	this->rectangle.setSize(sf::Vector2f(60.f, 100.f));
+	this->rectangle.setFillColor(sf::Color::Green);
+	this->rectangle.setPosition(this->playerposition.x+80,this->playerposition.y+70);
 }
 
 //settings animation timer 
@@ -32,12 +43,8 @@ void Player::initAnimations()
 
 void Player::initPhysics()
 {
-	this->velocityMax = 10.f;
-	this->velocityMin = 1.f;
-	this->acceleration = 3.f;
 	this->drag = 0.9f;
 	this->gravity = 0.6f;
-	this->velocityMaxY = 1.f;
 }
 
 //all funtion about player
@@ -47,7 +54,7 @@ Player::Player()
 	//variables
 	this->initVariables();
 
-
+	this->initVariables();
 	//player sprite and texture
 	this->initTexture();
 	this->initSprite();
@@ -74,19 +81,15 @@ const bool& Player::getAnimSwitch()
 	return anim_switch;
 }
 
-const sf::FloatRect Player::getGlobalBounds() const
+const sf::FloatRect Player::getBounds() const
 {
-	return this->playersprite.getGlobalBounds();
-}
-
-const sf::Vector2f Player::getPosition() const
-{
-	return this->playersprite.getPosition();
+	return this->rectangle.getGlobalBounds();
 }
 
 void Player::setPosition(const float x, const float y)
 {
 	this->playersprite.setPosition(x, y);
+	this->rectangle.setPosition(x+80, y+70);
 }
 
 void Player::resetVelocityY()
@@ -94,30 +97,15 @@ void Player::resetVelocityY()
 	this->velocity.y = 0.f;
 }
 
+const sf::Vector2f& Player::getpos() const
+{
+	return this->playersprite.getPosition();
+}
+
 void Player::resetAnimationTimer()
 {
 	this->animatetimer.restart();
 	this->animationSwitc = true;
-}
-
-void Player::move(const float dir_x,const float dir_y)
-{
-	this->playersprite.move(dir_x,dir_y);
-
-	//acceleration
-	this->velocity.x += dir_x * this->acceleration;
-	//this->velocity.y += dirY * this->accelerationJump;
-
-	//limit velocity
-	if (std::abs(this->velocity.x) > this->velocityMax)
-	{
-		this->velocity.x = this->velocityMax * ((this->velocity.x < 0.f) ? -1.f : 1.f);
-	}
-	/*if (std::abs(this->velocity.y) > this->velocityMax)
-	{
-		this->velocity.y = this->velocityMax * ((this->velocity.y < 0.f) ? -1.f : 1.f);
-		printf("%f", this->velocity.y);
-	}*/
 }
 
 void Player::updatePhysics()
@@ -145,32 +133,66 @@ void Player::updatePhysics()
 	//decceleration
 	this->velocity *= (this->drag);
 
-	//limit deceleration
-	if (std::abs(this->velocity.x) < this->velocityMin)
-		this->velocity.x = 0.f;
 	if (std::abs(this->velocity.y) < this->velocityMin)
 	{
 		this->velocity.y = 0.f;
 	}
 
 	this->playersprite.move(this->velocity);
+	this->rectangle.move(this->velocity);
+}
+
+//get HP of player
+const int& Player::getHp() const
+{
+	return this->hp;
+}
+
+//get HPMax of player
+const int& Player::getHpMax() const
+{
+	return this->hpMax;
+}
+
+//setting player HP
+void Player::setHp(const int hp)
+{
+	this->hp = hp;
+}
+
+//lose Hp function
+void Player::loseHp(const int value)
+{
+	this->hp -= value;
+	if (this->hp < 0)
+		this->hp = 0;
 }
 
 //Movement functions
 void Player::updatemovement()
 {
 	this->animState = PlAYER_ANIMATION_STATES::IDLE; //not walk
+	this->rectangle.setSize(sf::Vector2f(60.f, 100.f));
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
 		this->gravityBool = true;
 		this->animState = PlAYER_ANIMATION_STATES::MOVING_DOWN; //go down
+		this->rectangle.setSize(sf::Vector2f(100.f, 50.f));
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && this->jumping == false)
 	{
 		this->jumping = true;
 		this->jumpingUp = true;
 		this->gravityBool = true;
-		this->velocity.y = -30.f;
+		this->velocity.y = -50.f;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+		this->playersprite.move(6.f, 0.f);
+		this->rectangle.move(6.f, 0.f);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left )) {
+		this->playersprite.move(-6.f, 0.f);
+		this->rectangle.move(-6.f, 0.f);
 	}
 }
 
@@ -216,16 +238,34 @@ void Player::updateAnimations()
 }
 
 
+const bool Player::canAttack()
+{
+	if (this->attackcooldown >= this->attackcooldownMax)
+	{
+		this->attackcooldown = 0.f;
+		return true;
+	}
+	return false;
+}
+
+void Player::updateAttack()
+{
+	if (this->attackcooldown < this->attackcooldownMax)
+		this->attackcooldown += 0.5f;
+}
+
 //player update
 void Player::updated()
 {
 	this->updatemovement();
 	this->updateAnimations();
 	this->updatePhysics();
+	this->updateAttack();
 }
 
 //player render
 void Player::render(sf::RenderTarget& target)
 {
+	target.draw(this->rectangle);
 	target.draw(this->playersprite);
 }
