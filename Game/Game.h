@@ -1,4 +1,5 @@
 #pragma once
+#define _CRT_SECURE_NO_WARNINGS
 #include"Player.h"
 #include"background.h"
 #include<map>
@@ -7,6 +8,14 @@
 #include"enemy.h"
 #include<string>
 #include<sstream>
+#include"Mainmenu.h"
+#include"Textbox.h"
+#include<utility>
+#include<algorithm>
+#include<vector>
+#include<iostream>
+
+using namespace std;
 class Game
 {
 private:
@@ -14,6 +23,22 @@ private:
 	sf::RenderWindow* window;
 	Player* player;
 	background* bg;
+
+	Mainmenu* menu;
+	sf::Vector2i mousePosWindow;
+	sf::Vector2f mousePosview;
+	bool checkname = false;
+
+	FILE* fp;
+	char temp[255];
+	int score[6];
+	string name[6];
+	vector<pair<int, string>>userScore;
+	int gamestate = 0;
+	bool playername = false;
+	bool playstatus = false;
+	bool cangetnewscores = false;
+	bool firstendgames = false;
 
 	//GUI
 	sf::Font font;
@@ -31,6 +56,8 @@ private:
 
 	int directioncheck;
 	unsigned pointed;
+
+	sf::Clock nextpage;
 
 	//Resources
 	std::map <std::string, sf::Texture*>textuers;
@@ -50,8 +77,6 @@ private:
 	float spawntime;
 	float spawntimeMax;
 
-
-
 public:
 	//Game
 	Game();
@@ -60,6 +85,7 @@ public:
 	//Update and render
 	void run();
 
+	void updateMousePositions();
 	//update function
 	void updatePlayer();
 	void updateItem();

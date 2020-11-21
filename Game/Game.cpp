@@ -2,8 +2,9 @@
 //start window
 void Game::initwindow()
 {
-	this->window = new sf::RenderWindow(sf::VideoMode(1280, 720), "Game", sf::Style::Close | sf::Style::Titlebar);
+	this->window = new sf::RenderWindow(sf::VideoMode(1280, 720), "Game", sf::Style::Close |sf::Style::Resize| sf::Style::Titlebar);
 	this->window->setFramerateLimit(60);
+	this->menu = new Mainmenu(this->window->getSize().x, window->getSize().y);
 }
 
 //get new player
@@ -38,8 +39,8 @@ void Game::initEnemies()
 void Game::initGUI()
 {
 	//Load font
-	if(this->font.loadFromFile("font/Lobster-Regular.ttf"));
-	std::cout << "ERROR::GAME::Failed to load font" << "/n";
+	this->font.loadFromFile("Font/Lobster-Regular.ttf");
+	//std::cout << "ERROR::GAME::Failed to load font" << "/n";
 
 	//INit point texr
 	this->pointext.setFont(this->font);
@@ -124,11 +125,129 @@ Game::~Game()
 //run your game
 void Game::run()
 {
+	//Textbox playernametextbox(100, sf::Color::White, true);
+	//playernametextbox.setFont(this->font);
+	//playernametextbox.setPosition({ 500.f,320.f });
+	//playernametextbox.setlimit(true, 10);
+
+	int j = 0;
+
+	//this->fp = fopen("./score.txt", "r");
+	//for (int i = 0; i < 5; i++) {
+	//	fscanf(fp, "%s", &temp);
+	//	name[i] = temp;
+	//	fscanf(fp, "%d", &score[i]);
+	//	userScore.push_back(make_pair(score[i], name[i]));
+	//}
+
+	sf::Event e;
 	while (this->window->isOpen())
 	{
-		this->update();
-		this->render();
+
+		while (this->window->pollEvent(e))
+		{
+			switch (e.type)
+			{
+			case sf::Event::Closed:
+				window->close();
+			case sf::Event::TextEntered:
+				if (playername) {
+					//playernametextbox.typeOn(e);
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+					gamestate = 0;
+					checkname = false;
+				}
+			}
+
+		}
+		this->window->clear(); //for clear old frame
+		this->updateMousePositions();
+		if (gamestate == 0) {
+			this->menu->update();
+			this->menu->draw(*this->window);
+			if (checkname && !(playstatus)) {
+				this->menu->drawnamespace(*this->window);
+				//playernametextbox.drawTo(*this->window);
+			}
+			if (this->menu->getBounds_0().contains(this->mousePosview)) {
+				this->menu->buttoncheck(0);
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+					if (playstatus) {
+						gamestate = 1;
+					}
+					checkname = true;
+					playername = true;
+				}
+			}
+			else if (this->menu->getBounds_1().contains(this->mousePosview)) {
+				this->menu->buttoncheck(1);
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+					gamestate = 2;
+				}
+			}
+			else if (this->menu->getBounds_2().contains(this->mousePosview)) {
+				this->menu->buttoncheck(2);
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+					gamestate = 3;
+				}
+			}
+			else if (this->menu->getBounds_3().contains(this->mousePosview)) {
+				this->menu->buttoncheck(3);
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+					this->window->close();
+				}
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && checkname) {
+				playstatus = true;
+				checkname = false;
+				gamestate = 1;
+				this->menu->getplay(playstatus);
+				//name[5] = playernametextbox.gettext();
+			}
+		}
+		else if (gamestate == 1) {
+			if (this->player->getHp() != 0) {
+				this->update();
+				this->render();
+				cangetnewscores = true;
+			}
+		}
+		else if (gamestate == 2) {
+			this->menu->drawscore(*this->window);
+			if (this->menu->beforegetbounds().contains(this->mousePosview)) {
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->nextpage.getElapsedTime().asSeconds() > 0.25f) {
+					this->gamestate = 0;
+					this->nextpage.restart();
+				}
+			}
+		}
+		else if (gamestate == 3) {
+			this->menu->howtoplay(*this->window);
+			if (this->menu->nextgetbounds().contains(this->mousePosview)) {
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->nextpage.getElapsedTime().asSeconds() > 0.25f) {
+					this->menu->nextpages();
+					this->nextpage.restart();
+				}
+			}
+			else if (this->menu->beforegetbounds().contains(this->mousePosview)) {
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->nextpage.getElapsedTime().asSeconds() > 0.25f) {
+					if (this->menu->getpages() == 0) {
+						this->gamestate = 0;
+					}
+					this->menu->beforepages();
+					this->nextpage.restart();
+				}
+			}
+		}
+		this->window->display(); //for update new frame
 	}
+}
+
+void Game::updateMousePositions()
+{
+	this->mousePosWindow = sf::Mouse::getPosition(*this->window);
+	this->mousePosview = this->window->mapPixelToCoords(this->mousePosWindow);
 }
 
 //player updated
@@ -142,7 +261,7 @@ void Game::updateItem()
 	this->spawntime += 0.1f;
 	if (this->spawntime >= this->spawntimeMax)
 	{
-		this->ITEM.push_back(new item(1380, rand()%(500-200)+200));
+		this->ITEM.push_back(new item(2000, rand()%(500-200)+200));
 		this->spawntime = 0.f;
 	}
 	for (int i = 0; i < this->ITEM.size(); ++i) {
@@ -150,7 +269,7 @@ void Game::updateItem()
 		this->ITEM[i]->updated();
 		if (this->player->getBounds().intersects(this->ITEM[i]->getBounds()))
 		{
-			this->ITEM.erase(this->ITEM.begin() + i);
+			this->ITEM.erase(this->ITEM.begin());
 			this->pointed += 3;
 			std::cout << this->pointed << "\n";
 			item_removed = true;
@@ -173,14 +292,6 @@ void Game::updateCollision()
 		this->player->jumping = false;
 		this->player->jumpingUp = false;
 		this->player->gravityBool = false;
-	}
-	if (this->player->getpos().x <= 0)
-	{
-		this->player->setPosition(0.f, this->player->getpos().y);
-	}
-	if (this->player->getpos().x + 186.f >= this->window->getSize().x)
-	{
-		this->player->setPosition(this->window->getSize().x - 186.f, this->player->getpos().y);
 	}
 }
 
@@ -272,10 +383,10 @@ void Game::updateEnemiesandcombat()
 	{
 		int random = rand() % 2;
 		if (random == 0) {
-			this->enemies.push_back(new Enemy(2000.f, 350.f));
+			this->enemies.push_back(new Enemy(2400.f, 350.f));
 		}
 		else if (random == 1) {
-			this->enemies.push_back(new Enemy(2000.f, 450.f));
+			this->enemies.push_back(new Enemy(2400.f, 450.f));
 		}
 		this->spawnTimer = 0.f;
 	}
@@ -341,7 +452,6 @@ void Game::renderGUI()
 //render window
 void Game::render()
 {
-	this->window->clear(); //for clear old frame
 	this->bg->render(*this->window);
 	for (auto* bulleter : this->Bullets)
 	{
@@ -359,5 +469,4 @@ void Game::render()
 	}
 	this->renderPlayer(); //for made player
 	this->renderGUI();
-	this->window->display(); //for update new frame
 }

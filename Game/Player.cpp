@@ -26,7 +26,7 @@ void Player::initSprite()
 	this->currentFrame = sf::IntRect(0, 0, 620, 800);
 	this->playersprite.setTextureRect(sf::IntRect(this->currentFrame));
 	this->playersprite.setScale(0.3f, 0.3f);
-	this->playerposition = sf::Vector2f(12, 13);
+	this->playerposition = sf::Vector2f(100, 300);
 	this->playersprite.setPosition(sf::Vector2f(this->playerposition));
 	this->rectangle.setSize(sf::Vector2f(60.f, 100.f));
 	this->rectangle.setFillColor(sf::Color::Green);
@@ -97,6 +97,11 @@ void Player::resetVelocityY()
 	this->velocity.y = 0.f;
 }
 
+void Player::resetVelocityX()
+{
+	this->velocity.x = 0.f;
+}
+
 const sf::Vector2f& Player::getpos() const
 {
 	return this->playersprite.getPosition();
@@ -140,6 +145,8 @@ void Player::updatePhysics()
 
 	this->playersprite.move(this->velocity);
 	this->rectangle.move(this->velocity);
+	this->playerposition.x += velocity.x;
+	this->playerposition.y += velocity.y;
 }
 
 //get HP of player
@@ -186,13 +193,15 @@ void Player::updatemovement()
 		this->gravityBool = true;
 		this->velocity.y = -50.f;
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-		this->playersprite.move(6.f, 0.f);
-		this->rectangle.move(6.f, 0.f);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)&&this->playerposition.x<=1100.f) {
+		this->playersprite.move(5.f, 0.f);
+		this->rectangle.move(5.f, 0.f);
+		this->playerposition.x += 5.f;
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left )) {
-		this->playersprite.move(-6.f, 0.f);
-		this->rectangle.move(-6.f, 0.f);
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left ) && this->playerposition.x > 0.f) {
+		this->playersprite.move(-5.f, 0.f);
+		this->rectangle.move(-5.f, 0.f);
+		this->playerposition.x -= 5.f;
 	}
 }
 

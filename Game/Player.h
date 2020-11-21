@@ -63,6 +63,7 @@ public:
 	//Modifiers
 	void setPosition(const float x, const float y);
 	void resetVelocityY();
+	void resetVelocityX();
 
 	//accessor
 	const sf::Vector2f& getpos() const;

@@ -162,6 +162,7 @@
     <ClInclude Include="item.h" />
     <ClInclude Include="Mainmenu.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Textbox.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
