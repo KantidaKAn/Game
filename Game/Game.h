@@ -24,7 +24,7 @@ private:
 	Player* player;
 	background* bg;
 
-	Mainmenu* menu;
+	Mainmenu* mainmenu;
 	sf::Vector2i mousePosWindow;
 	sf::Vector2f mousePosview;
 	bool checkname = false;

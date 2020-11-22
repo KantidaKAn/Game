@@ -42,7 +42,7 @@ Mainmenu::Mainmenu(float width, float height)
 	menu[3].setCharacterSize(70);
 	menu[3].setPosition(sf::Vector2f((width / 2) - 300.f, (height / (MAX_NUMBER_OF_ITEMS + 1) * 4)-70));
 
-	buttonname.loadFromFile("Cat/namespace.png");
+	buttonname.loadFromFile("Cat/namespace3.png");
 	namebuttonsprite.setTexture(this->buttonname);
 	namebuttonsprite.setPosition(sf::Vector2f((width / 2) - 150.f, (height / 2) - 150.f));
 

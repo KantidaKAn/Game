@@ -4,7 +4,7 @@ void Game::initwindow()
 {
 	this->window = new sf::RenderWindow(sf::VideoMode(1280, 720), "Game", sf::Style::Close |sf::Style::Resize| sf::Style::Titlebar);
 	this->window->setFramerateLimit(60);
-	this->menu = new Mainmenu(this->window->getSize().x, window->getSize().y);
+	this->mainmenu = new Mainmenu(this->window->getSize().x, window->getSize().y);
 }
 
 //get new player
@@ -125,10 +125,10 @@ Game::~Game()
 //run your game
 void Game::run()
 {
-	//Textbox playernametextbox(100, sf::Color::White, true);
-	//playernametextbox.setFont(this->font);
-	//playernametextbox.setPosition({ 500.f,320.f });
-	//playernametextbox.setlimit(true, 10);
+	Textbox playernametextbox(55, sf::Color::Black, true);
+	playernametextbox.setFont(this->font);
+	playernametextbox.setPosition({ 520.f,350.f });
+	playernametextbox.setlimit(true, 10);
 
 	int j = 0;
 
@@ -152,7 +152,7 @@ void Game::run()
 				window->close();
 			case sf::Event::TextEntered:
 				if (playername) {
-					//playernametextbox.typeOn(e);
+					playernametextbox.typeOn(e);
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 					gamestate = 0;
@@ -164,14 +164,14 @@ void Game::run()
 		this->window->clear(); //for clear old frame
 		this->updateMousePositions();
 		if (gamestate == 0) {
-			this->menu->update();
-			this->menu->draw(*this->window);
+			this->mainmenu->update();
+			this->mainmenu->draw(*this->window);
 			if (checkname && !(playstatus)) {
-				this->menu->drawnamespace(*this->window);
-				//playernametextbox.drawTo(*this->window);
+				this->mainmenu->drawnamespace(*this->window);
+				playernametextbox.drawTo(*this->window);
 			}
-			if (this->menu->getBounds_0().contains(this->mousePosview)) {
-				this->menu->buttoncheck(0);
+			if (this->mainmenu->getBounds_0().contains(this->mousePosview)) {
+				this->mainmenu->buttoncheck(0);
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 					if (playstatus) {
 						gamestate = 1;
@@ -180,20 +180,20 @@ void Game::run()
 					playername = true;
 				}
 			}
-			else if (this->menu->getBounds_1().contains(this->mousePosview)) {
-				this->menu->buttoncheck(1);
+			else if (this->mainmenu->getBounds_1().contains(this->mousePosview)) {
+				this->mainmenu->buttoncheck(1);
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 					gamestate = 2;
 				}
 			}
-			else if (this->menu->getBounds_2().contains(this->mousePosview)) {
-				this->menu->buttoncheck(2);
+			else if (this->mainmenu->getBounds_2().contains(this->mousePosview)) {
+				this->mainmenu->buttoncheck(2);
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 					gamestate = 3;
 				}
 			}
-			else if (this->menu->getBounds_3().contains(this->mousePosview)) {
-				this->menu->buttoncheck(3);
+			else if (this->mainmenu->getBounds_3().contains(this->mousePosview)) {
+				this->mainmenu->buttoncheck(3);
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 					this->window->close();
 				}
@@ -202,8 +202,8 @@ void Game::run()
 				playstatus = true;
 				checkname = false;
 				gamestate = 1;
-				this->menu->getplay(playstatus);
-				//name[5] = playernametextbox.gettext();
+				this->mainmenu->getplay(playstatus);
+				name[5] = playernametextbox.gettext();
 			}
 		}
 		else if (gamestate == 1) {
@@ -214,8 +214,8 @@ void Game::run()
 			}
 		}
 		else if (gamestate == 2) {
-			this->menu->drawscore(*this->window);
-			if (this->menu->beforegetbounds().contains(this->mousePosview)) {
+			this->mainmenu->drawscore(*this->window);
+			if (this->mainmenu->beforegetbounds().contains(this->mousePosview)) {
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->nextpage.getElapsedTime().asSeconds() > 0.25f) {
 					this->gamestate = 0;
 					this->nextpage.restart();
@@ -223,19 +223,19 @@ void Game::run()
 			}
 		}
 		else if (gamestate == 3) {
-			this->menu->howtoplay(*this->window);
-			if (this->menu->nextgetbounds().contains(this->mousePosview)) {
+			this->mainmenu->howtoplay(*this->window);
+			if (this->mainmenu->nextgetbounds().contains(this->mousePosview)) {
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->nextpage.getElapsedTime().asSeconds() > 0.25f) {
-					this->menu->nextpages();
+					this->mainmenu->nextpages();
 					this->nextpage.restart();
 				}
 			}
-			else if (this->menu->beforegetbounds().contains(this->mousePosview)) {
+			else if (this->mainmenu->beforegetbounds().contains(this->mousePosview)) {
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->nextpage.getElapsedTime().asSeconds() > 0.25f) {
-					if (this->menu->getpages() == 0) {
+					if (this->mainmenu->getpages() == 0) {
 						this->gamestate = 0;
 					}
-					this->menu->beforepages();
+					this->mainmenu->beforepages();
 					this->nextpage.restart();
 				}
 			}
