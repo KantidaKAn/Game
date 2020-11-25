@@ -42,6 +42,7 @@ private:
 	int bloodcount = 0;
 	//GUI
 	sf::Font font;
+	sf::Font Lamooned;
 	sf::Text pointext;
 
 	sf::RectangleShape playerHpBar;

@@ -1,5 +1,5 @@
-Focus 1000000
-l 222
-focussy 114
-did 60
-kanny 51
+r 189
+focus 100
+fo 66
+tp 63
+fo 51

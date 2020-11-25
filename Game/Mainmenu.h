@@ -20,6 +20,8 @@ private:
 	sf::Sprite namebuttonsprite;
 	sf::Texture howtoplays[5];
 	sf::Sprite howtoplaysprites[5];
+	sf::Texture dietexture;
+	sf::Sprite diespite;
 	bool playstate = false;
 	int pages = 0;
 
@@ -46,4 +48,5 @@ public:
 	void nextpages();
 	void beforepages();
 	const int getpages() const;
+	void drawdie(sf::RenderWindow& window);
 };

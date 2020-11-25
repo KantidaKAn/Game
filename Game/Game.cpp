@@ -34,6 +34,7 @@ void Game::initGUI()
 {
 	//Load font
 	this->font.loadFromFile("Font/Lobster-Regular.ttf");
+	this->Lamooned.loadFromFile("Font/FC Lamoon Bold Italic ver 1.00.ttf");
 	//std::cout << "ERROR::GAME::Failed to load font" << "/n";
 
 	//INit point texr
@@ -201,11 +202,12 @@ void Game::run()
 				this->render();
 				cangetnewscores = true;
 			}
-			//else if (this->player->getHp() == 0 && dietimes.getElapsedTime().asSeconds() <= 3.f) {
-			//	this->menu->drawdead(*this->window);
-			//}
+			else if (this->player->getHp() == 0 && deadtimes.getElapsedTime().asSeconds() <= 3.f) {
+				this->mainmenu->drawdie(*this->window);
+			}
 			else if (this->player->getHp() == 0 && cangetnewscores && deadtimes.getElapsedTime().asSeconds() > 3.f) {
 				this->updateItem();
+				this->updateEnemiesandcombat();
 				j++;
 				point = pointed;
 				this->fp = fopen("./score.txt", "r");
@@ -232,16 +234,37 @@ void Game::run()
 		else if (gamestate == 2) {
 			this->mainmenu->drawscore(*this->window);
 			if (firstendgames == false) {
-				for (int i = 135; i <= 475; i += 85) {
-					showhighscore(950, i, to_string(userScore[(i - 135) / 85].first), *this->window, &font);
-					showhighscore(250, i, userScore[j + (i - 135) / 85].second, *this->window, &font);
-				}
+				showhighscore(950, 258, to_string(userScore[0].first), *this->window, &Lamooned);
+				showhighscore(590, 258, userScore[0].second, *this->window, &Lamooned);
+
+				showhighscore(950, 335, to_string(userScore[1].first), *this->window, &Lamooned);
+				showhighscore(590, 335, userScore[1].second, *this->window, &Lamooned);
+
+				showhighscore(950, 405, to_string(userScore[2].first), *this->window, &Lamooned);
+				showhighscore(590, 405, userScore[2].second, *this->window, &Lamooned);
+
+				showhighscore(950, 474, to_string(userScore[3].first), *this->window, &Lamooned);
+				showhighscore(590, 474, userScore[3].second, *this->window, &Lamooned);
+
+				showhighscore(950, 543, to_string(userScore[4].first), *this->window, &Lamooned);
+				showhighscore(590, 543, userScore[4].second, *this->window, &Lamooned);
 			}
-			else if (firstendgames == true) {
-				for (int i = 135; i <= 475; i += 85) {
-					showhighscore(950, i, to_string(userScore[(4 + j) - ((i - 135) / 85)].first), *this->window, &font);
-					showhighscore(250, i, userScore[(4 + j) - ((i - 135) / 85)].second, *this->window, &font);
-				}
+			else if (firstendgames == true) 
+			{
+				showhighscore(950, 258, to_string(userScore[4+j].first), *this->window, &Lamooned);
+				showhighscore(590, 258, userScore[4+j].second, *this->window, &Lamooned);
+
+				showhighscore(950, 335, to_string(userScore[3+j].first), *this->window, &Lamooned);
+				showhighscore(590, 335, userScore[3+j].second, *this->window, &Lamooned);
+
+				showhighscore(950, 405, to_string(userScore[2+j].first), *this->window, &Lamooned);
+				showhighscore(590, 405, userScore[2+j].second, *this->window, &Lamooned);
+
+				showhighscore(950, 474, to_string(userScore[1+j].first), *this->window, &Lamooned);
+				showhighscore(590, 474, userScore[1+j].second, *this->window, &Lamooned);
+
+				showhighscore(950, 543, to_string(userScore[0+j].first), *this->window, &Lamooned);
+				showhighscore(590, 543, userScore[0+j].second, *this->window, &Lamooned);
 			}
 			if (this->mainmenu->beforegetbounds().contains(this->mousePosview)) {
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->nextpage.getElapsedTime().asSeconds() > 0.25f) {
@@ -275,10 +298,11 @@ void Game::run()
 void Game::showhighscore(int x, int y, string word, sf::RenderWindow& window, sf::Font* font)
 {
 	sf::Text text;
+	text.setFillColor(sf::Color::Black);
 	text.setFont(*font);
 	text.setPosition(x, y);
 	text.setString(word);
-	text.setCharacterSize(120);
+	text.setCharacterSize(60);
 	window.draw(text);
 }
 
@@ -451,6 +475,24 @@ void Game::updateEnemiesandcombat()
 			this->player->loseHp(10);
 			this->enemies.erase(this->enemies.begin() + i);
 			enemy_removed = true;
+		}
+		if (this->player->getHp() == 0) {
+			if (enemies.size() == 1) {
+				this->enemies.erase(this->enemies.begin());
+				std::cout << "delete" << endl;
+			}
+			else {
+				if (i == 0) {
+					this->enemies.erase(this->enemies.begin());
+					std::cout << "delete" << endl;
+				}
+				this->enemies.erase(this->enemies.begin() + i);
+				std::cout << "delete" << endl;
+			}
+			this->pushbackenemy.restart();
+			this->spawnTimerEnemiesMax = 50.f;
+			this->plusSpeed = 0.f;
+			this->player->setPosition(100, 300);
 		}
 	}
 }

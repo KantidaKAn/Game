@@ -12,8 +12,7 @@ Mainmenu::Mainmenu(float width, float height)
 	howtoplays[1].loadFromFile("Cat/How_to_play2.png");
 	howtoplays[2].loadFromFile("Cat/How_to_play3.png");
 	howtoplays[3].loadFromFile("Cat/How_to_play4.png");
-	howtoplays[4].loadFromFile("Sprite/BGty.png");
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 4 ; i++) {
 		howtoplaysprites[i].setTexture(howtoplays[i]);
 	}
 
@@ -46,7 +45,7 @@ Mainmenu::Mainmenu(float width, float height)
 	namebuttonsprite.setTexture(this->buttonname);
 	namebuttonsprite.setPosition(sf::Vector2f((width / 2) - 150.f, (height / 2) - 150.f));
 
-	nextbutton.loadFromFile("Sprite/Arrow.png");
+	nextbutton.loadFromFile("Cat/arrow.png");
 	nextbuttonsprite.setSize(sf::Vector2f(105.f, 75.f));
 	nextbuttonsprite.setTexture(&this->nextbutton);
 	nextbuttonsprite.setPosition(1150.f, 600.f);
@@ -56,6 +55,9 @@ Mainmenu::Mainmenu(float width, float height)
 	beforebuttonsprite.setTexture(&this->nextbutton);
 	beforebuttonsprite.setPosition(130.f, 600.f);
 	selectedITEMindex = 0;
+
+	dietexture.loadFromFile("Cat/GameOver.png");
+	diespite.setTexture(this->dietexture);
 }
 
 Mainmenu::~Mainmenu()
@@ -159,7 +161,7 @@ void Mainmenu::update()
 void Mainmenu::howtoplay(sf::RenderWindow& window)
 {
 	window.draw(this->howtoplaysprites[this->pages]);
-	if (this->pages < 4) {
+	if (this->pages < 3) {
 		window.draw(this->nextbuttonsprite);
 	}
 	window.draw(this->beforebuttonsprite);
@@ -167,7 +169,7 @@ void Mainmenu::howtoplay(sf::RenderWindow& window)
 
 void Mainmenu::nextpages()
 {
-	if (this->pages < 4) {
+	if (this->pages < 3) {
 		(this->pages)++;
 	}
 }
@@ -183,4 +185,9 @@ void Mainmenu::beforepages()
 const int Mainmenu::getpages() const
 {
 	return this->pages;
+}
+
+void Mainmenu::drawdie(sf::RenderWindow& window)
+{
+	window.draw(this->diespite);
 }
