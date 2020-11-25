@@ -3,7 +3,6 @@
 #include"Player.h"
 #include"background.h"
 #include<map>
-#include"bullet.h"
 #include"item.h"
 #include"enemy.h"
 #include<string>
@@ -40,6 +39,7 @@ private:
 	bool cangetnewscores = false;
 	bool firstendgames = false;
 
+	int bloodcount = 0;
 	//GUI
 	sf::Font font;
 	sf::Text pointext;
@@ -48,20 +48,30 @@ private:
 	sf::RectangleShape playerHpBarBack;
 
 	//Enemies
-	float spawnTimer;
-	float spawnTimerMax;
+	float spawnTimerEnemies;
+	float spawnTimerEnemiesMax;
 
 	float spawnTimerblood;
 	float spawnTimerbloodMax;
 
+	float spawntimeitem;
+	float spawntimeitemMax;
+
 	int directioncheck;
 	unsigned pointed;
+	unsigned point;
+
+	sf::Clock deadtimes;
 
 	sf::Clock nextpage;
+	sf::Clock speedincrease;
+	sf::Clock pushbackenemy;
+
+	float plusSpeed=0.f;
+
 
 	//Resources
-	std::map <std::string, sf::Texture*>textuers;
-	std::vector<bullet*>Bullets;
+	std::map <std::string, sf::Texture*>textures;
 	std::vector<Enemy*> enemies;
 	std::vector<item*>ITEM;
 	//Function
@@ -69,13 +79,11 @@ private:
 	void initplayer();
 	void inititem();
 	void initbackground();
-	void inittextuer();
 	void initEnemies();
 	void initGUI();
 	void initsystems();
 
-	float spawntime;
-	float spawntimeMax;
+
 
 public:
 	//Game
@@ -84,6 +92,7 @@ public:
 
 	//Update and render
 	void run();
+	void showhighscore(int x, int y, string word, sf::RenderWindow& window, sf::Font* font);
 
 	void updateMousePositions();
 	//update function
@@ -92,7 +101,6 @@ public:
 	void updateCollision();
 	void updateInput();
 	void update();
-	void updatebullet();
 	void updateEnemiesandcombat();
 	void updateGUI();
 

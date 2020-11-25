@@ -2,23 +2,38 @@
 
 void item::inititemTexture()
 {
-	this->itemtexture.loadFromFile("Cat/Candy.png");
+	if (types == 0) {
+		this->itemtexture.loadFromFile("Cat/Candy.png");
+	}
+	else if (types == 1) {
+		this->itemtexture.loadFromFile("Cat/blood.png");
+	}
 }
 
 void item::inititemSprite()
 {
-	this->itemsprite.setTexture(this->itemtexture);
-	this->itemsprite.setTextureRect(sf::IntRect((rand() % 5) * 103, (rand() % 5) * 104, 103, 104));
-	this->itemsprite.setScale(0.7f, 0.7f);
+	if (types == 0) {
+		this->itemsprite.setTexture(this->itemtexture);
+		this->itemsprite.setTextureRect(sf::IntRect((rand() % 5) * 103, (rand() % 5) * 104, 103, 104));
+		this->itemsprite.setScale(0.7f, 0.7f);
+	}
+	else if (types == 1) {
+		this->itemsprite.setTexture(this->itemtexture);
+		this->itemsprite.setScale(0.3f, 0.3f);
+	}
 }
 
-item::item(float pos_x, float pos_y)
+item::item(float pos_x, float pos_y,int type)
 {
-	this->itemposition = sf::Vector2f(pos_x, pos_y);
-	this->itemsprite.setPosition(sf::Vector2f(this->itemposition));
+		this->itemposition = sf::Vector2f(pos_x, pos_y);
+		this->itemsprite.setPosition(sf::Vector2f(this->itemposition));
 
-	this->inititemTexture();
-	this->inititemSprite();
+
+		types = type;
+
+		this->inititemTexture();
+		this->inititemSprite();
+
 }
 
 item::~item()
@@ -28,6 +43,11 @@ item::~item()
 const sf::FloatRect item::getBounds() const
 {
 	return this->itemsprite.getGlobalBounds();
+}
+
+const int item::gettype() const
+{
+	return this->types;
 }
 
 void item::updatemovement()

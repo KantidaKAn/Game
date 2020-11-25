@@ -15,8 +15,8 @@ void Game::initplayer()
 
 void Game::inititem()
 {
-	this->spawntimeMax = 10.f;
-	this->spawntime = this->spawntimeMax;
+	this->spawntimeitemMax = 4.f;
+	this->spawntimeitem = this->spawntimeitemMax;
 }
 
 void Game::initbackground()
@@ -24,16 +24,10 @@ void Game::initbackground()
 	this->bg = new background();
 }
 
-void Game::inittextuer()
-{
-	this->textuers["BULLET"] = new sf::Texture();
-	this->textuers["BULLET"]->loadFromFile("Cat/bullet.png");
-}
-
 void Game::initEnemies()
 {
-	this->spawnTimerMax = 50.f;
-	this->spawnTimer = this->spawnTimerMax;
+	this->spawnTimerEnemiesMax = 50.f;
+	this->spawnTimerEnemies = this->spawnTimerEnemiesMax;
 }
 
 void Game::initGUI()
@@ -84,8 +78,6 @@ Game::Game()
 	
 	this->inititem();
 	
-	this->inittextuer();
-	
 	this->initEnemies();
 
 	this->initGUI();
@@ -99,15 +91,11 @@ Game::~Game()
 	delete this->bg;
 
 	//Delete textuer
-	for (auto &i : this-> textuers )
+	for (auto &i : this-> textures )
 	{
 		delete i.second;
 	}
-	//Delete bulletsm
-	for (auto* i : this->Bullets)
-	{
-		delete i;
-	}
+
 
 	//Delete item
 	for (auto* i : this->ITEM) 
@@ -132,13 +120,14 @@ void Game::run()
 
 	int j = 0;
 
-	//this->fp = fopen("./score.txt", "r");
-	//for (int i = 0; i < 5; i++) {
-	//	fscanf(fp, "%s", &temp);
-	//	name[i] = temp;
-	//	fscanf(fp, "%d", &score[i]);
-	//	userScore.push_back(make_pair(score[i], name[i]));
-	//}
+	this->fp = fopen("./score.txt", "r");
+	for (int i = 0; i < 5; i++) {
+		fscanf(fp, "%s", &temp);
+		name[i] = temp;
+		fscanf(fp, "%d", &score[i]);
+		userScore.push_back(make_pair(score[i], name[i]));
+	}
+
 
 	sf::Event e;
 	while (this->window->isOpen())
@@ -212,9 +201,48 @@ void Game::run()
 				this->render();
 				cangetnewscores = true;
 			}
+			//else if (this->player->getHp() == 0 && dietimes.getElapsedTime().asSeconds() <= 3.f) {
+			//	this->menu->drawdead(*this->window);
+			//}
+			else if (this->player->getHp() == 0 && cangetnewscores && deadtimes.getElapsedTime().asSeconds() > 3.f) {
+				this->updateItem();
+				j++;
+				point = pointed;
+				this->fp = fopen("./score.txt", "r");
+				score[5] = point;
+				userScore.push_back(make_pair(score[5], name[5]));
+				sort(userScore.begin(), userScore.end());
+				fclose(fp);
+				fopen("./score.txt", "w");
+				for (int i = 4 + j; i >= 0 + j; i--) {
+					strcpy(temp, userScore[i].second.c_str());
+					fprintf(fp, "%s %d\n", temp, userScore[i].first);
+				}
+				fclose(fp);
+
+				this->player->setHp(100);
+				cangetnewscores = false;
+				this->gamestate = 0;
+				playstatus = false;
+				firstendgames = true;
+				checkname = false;
+				pointed = 0;
+			}
 		}
 		else if (gamestate == 2) {
 			this->mainmenu->drawscore(*this->window);
+			if (firstendgames == false) {
+				for (int i = 135; i <= 475; i += 85) {
+					showhighscore(950, i, to_string(userScore[(i - 135) / 85].first), *this->window, &font);
+					showhighscore(250, i, userScore[j + (i - 135) / 85].second, *this->window, &font);
+				}
+			}
+			else if (firstendgames == true) {
+				for (int i = 135; i <= 475; i += 85) {
+					showhighscore(950, i, to_string(userScore[(4 + j) - ((i - 135) / 85)].first), *this->window, &font);
+					showhighscore(250, i, userScore[(4 + j) - ((i - 135) / 85)].second, *this->window, &font);
+				}
+			}
 			if (this->mainmenu->beforegetbounds().contains(this->mousePosview)) {
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->nextpage.getElapsedTime().asSeconds() > 0.25f) {
 					this->gamestate = 0;
@@ -244,6 +272,16 @@ void Game::run()
 	}
 }
 
+void Game::showhighscore(int x, int y, string word, sf::RenderWindow& window, sf::Font* font)
+{
+	sf::Text text;
+	text.setFont(*font);
+	text.setPosition(x, y);
+	text.setString(word);
+	text.setCharacterSize(120);
+	window.draw(text);
+}
+
 void Game::updateMousePositions()
 {
 	this->mousePosWindow = sf::Mouse::getPosition(*this->window);
@@ -258,26 +296,52 @@ void Game::updatePlayer()
 
 void Game::updateItem()
 {
-	this->spawntime += 0.1f;
-	if (this->spawntime >= this->spawntimeMax)
+	this->spawntimeitem += 0.1f;
+	if (this->spawntimeitem >= this->spawntimeitemMax)
 	{
-		this->ITEM.push_back(new item(2000, rand()%(500-200)+200));
-		this->spawntime = 0.f;
+		if (this->bloodcount >= 10) {
+			this->ITEM.push_back(new item(2000, rand() % (600 - 100) + 100, 1));
+			this->spawntimeitem = 0.f;
+			this->bloodcount -= 10;
+		}
+		else {
+			this->ITEM.push_back(new item(2000, rand() % (600 - 100) + 100, 0));
+			this->spawntimeitem = 0.f;
+		}
 	}
 	for (int i = 0; i < this->ITEM.size(); ++i) {
 		bool item_removed = false;
-		this->ITEM[i]->updated();
-		if (this->player->getBounds().intersects(this->ITEM[i]->getBounds()))
+		this->ITEM[i]->updated(); 
+		if (this->player->getBounds().intersects(this->ITEM[i]->getBounds())&&this->ITEM[i]->gettype()==0)
 		{
-			this->ITEM.erase(this->ITEM.begin());
+			this->ITEM.erase(this->ITEM.begin() + i);
 			this->pointed += 3;
-			std::cout << this->pointed << "\n";
+			item_removed = true;
+			this->bloodcount++;
+		}
+		if (this->player->getBounds().intersects(this->ITEM[i]->getBounds()) && this->ITEM[i]->gettype() == 1)
+		{
+			this->ITEM.erase(this->ITEM.begin() + i);
+			this->player->permHp(20);
 			item_removed = true;
 		}
-		
 		if (this->ITEM[i]->getBounds().left + ITEM[i]->getBounds().width < 0.f) {
 			this->ITEM.erase(this->ITEM.begin() + i);
 			item_removed = true;
+		}
+		if (this->player->getHp() == 0) {
+			if (ITEM.size() == 1) {
+				this->ITEM.erase(this->ITEM.begin());
+				std::cout << "delete" << endl;
+			}
+			else {
+				if (i == 0) {
+					this->ITEM.erase(this->ITEM.begin());
+					std::cout << "delete" << endl;
+				}
+				this->ITEM.erase(this->ITEM.begin() + i);
+				std::cout << "delete" << endl;
+			}
 		}
 	}
 }
@@ -310,14 +374,6 @@ void Game::updateInput()
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 		this->directioncheck = 3;
 	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)&& this-> player->canAttack())
-	{
-		this->Bullets.push_back(
-			new bullet(this->textuers["BULLET"],
-			(this->player->getpos().x+ this->player->getBounds().width/2.f)+50,
-			(this->player->getpos().y)+130,1.f,0.f,12.f));
-	}
 }
 
 
@@ -344,7 +400,6 @@ void Game::update()
 
 	this->updateInput();
 	
-	this->updatebullet();
 
 	this->updateItem();
 	
@@ -357,54 +412,34 @@ void Game::update()
 
 }
 
-void Game::updatebullet()
-{
-	unsigned counter = 0;
-	for (auto* bulleter : this->Bullets)
-	{
-		bulleter->update();
-
-		if (bulleter->getBounds().left + bulleter->getBounds().width > 1280.f)
-		{
-			delete this-> Bullets.at(counter);
-			this->Bullets.erase(this->Bullets.begin() + counter);
-			--counter;
-
-		}
-
-		++counter;
-	}
-}
 
 void Game::updateEnemiesandcombat()
 {
-	this->spawnTimer += 0.5f;
-	if (this->spawnTimer >= this->spawnTimerMax)
+	this->spawnTimerEnemies += 0.5f;
+	if (this->pushbackenemy.getElapsedTime().asSeconds() >= 20.f) {
+		this->spawnTimerEnemiesMax -= 5.f;
+		this->pushbackenemy.restart();
+	}
+	if (this->spawnTimerEnemies >= this->spawnTimerEnemiesMax)
 	{
 		int random = rand() % 2;
 		if (random == 0) {
-			this->enemies.push_back(new Enemy(2400.f, 350.f));
+			this->enemies.push_back(new Enemy(2400.f, 420.f));
 		}
 		else if (random == 1) {
-			this->enemies.push_back(new Enemy(2400.f, 450.f));
+			this->enemies.push_back(new Enemy(2400.f, 300.f));
 		}
-		this->spawnTimer = 0.f;
+		this->spawnTimerEnemies = 0.f;
 	}
 
 	for (int i =0; i <this->enemies.size();++i)
 	{
 		bool enemy_removed = false;
-		this->enemies[i]->update();
-		for (size_t k = 0; k < this->Bullets.size()&&!enemy_removed ; k++)
-		{
-			if (this->Bullets[k]->getBounds().intersects(this->enemies[i]->getBounds()))
-			{
-				enemy_removed = true;
-				this->pointed += 1;
-				this->enemies.erase(this->enemies.begin() + i);
-				this->Bullets.erase(this->Bullets.begin() + k);
-			}
+		if (this->speedincrease.getElapsedTime().asSeconds() >= 10.f) {
+			this->plusSpeed += 1.f;
+			this->speedincrease.restart();
 		}
+		this->enemies[i]->update(plusSpeed);
 		//Remove enemies at the bottom of the screen
 		if (this->enemies[i]->getBounds().left +this->enemies[i]->getBounds().width< 0.f )
 		{
@@ -413,7 +448,7 @@ void Game::updateEnemiesandcombat()
 		}
 		if (this->player->getBounds().intersects(this->enemies[i]->getBounds()))
 		{
-			this->player->loseHp(5);
+			this->player->loseHp(10);
 			this->enemies.erase(this->enemies.begin() + i);
 			enemy_removed = true;
 		}
@@ -433,6 +468,9 @@ void Game::updateGUI()
 	float hpPercent = static_cast<float>(this->player->getHp()) / this->player->getHpMax();
 	this->playerHpBar.setSize(sf::Vector2f(400.f * hpPercent, this->playerHpBar.getSize().y));
 
+	if (this->player->getHp() == 0) {
+		this->deadtimes.restart();
+	}
 }
 
 //render player
@@ -453,10 +491,6 @@ void Game::renderGUI()
 void Game::render()
 {
 	this->bg->render(*this->window);
-	for (auto* bulleter : this->Bullets)
-	{
-		bulleter->render(this->window);
-	}
 
 	for (auto* items : this->ITEM)
 	{

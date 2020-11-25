@@ -10,7 +10,6 @@ private:
 	sf::Texture textture;
 	float speed;
 	void initShape();
-	void initVariables();
 
 public:
 	Enemy(float pos_x, float pos_y);
@@ -19,9 +18,8 @@ public:
 	//Accessors
 	const sf::FloatRect getBounds() const;
 
-
 	//Function
-	void update();
+	void update(float plus);
 	void render(sf::RenderTarget& target);
 };
 

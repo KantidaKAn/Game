@@ -8,10 +8,10 @@ Mainmenu::Mainmenu(float width, float height)
 	scoreTexture.loadFromFile("Cat/HIHGSCOR.png");
 	scoresprite.setTexture(this->scoreTexture);
 
-	howtoplays[0].loadFromFile("Sprite/1.png");
-	howtoplays[1].loadFromFile("Sprite/2.png");
-	howtoplays[2].loadFromFile("Sprite/3.png");
-	howtoplays[3].loadFromFile("Sprite/4.png");
+	howtoplays[0].loadFromFile("Cat/How_to_play1.png");
+	howtoplays[1].loadFromFile("Cat/How_to_play2.png");
+	howtoplays[2].loadFromFile("Cat/How_to_play3.png");
+	howtoplays[3].loadFromFile("Cat/How_to_play4.png");
 	howtoplays[4].loadFromFile("Sprite/BGty.png");
 	for (int i = 0; i < 5; i++) {
 		howtoplaysprites[i].setTexture(howtoplays[i]);

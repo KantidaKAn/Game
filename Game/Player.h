@@ -77,7 +77,8 @@ public:
 
 	void setHp(const int hp);
 	void loseHp(const int value);
-	
+	void permHp(const int value);
+
 	//Movement Update
 	void updatemovement();
 	void updateAnimations();

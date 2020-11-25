@@ -175,12 +175,19 @@ void Player::loseHp(const int value)
 		this->hp = 0;
 }
 
+void Player::permHp(const int value)
+{
+	this->hp += value;
+	if (this->hp > 100)
+		this->hp = 100;
+}
+
 //Movement functions
 void Player::updatemovement()
 {
 	this->animState = PlAYER_ANIMATION_STATES::IDLE; //not walk
 	this->rectangle.setSize(sf::Vector2f(60.f, 100.f));
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)&&jumping==false)
 	{
 		this->gravityBool = true;
 		this->animState = PlAYER_ANIMATION_STATES::MOVING_DOWN; //go down

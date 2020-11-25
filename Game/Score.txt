@@ -1,0 +1,5 @@
+Focus 1000000
+l 222
+focussy 114
+did 60
+kanny 51
