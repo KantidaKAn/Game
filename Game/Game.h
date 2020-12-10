@@ -40,6 +40,7 @@ private:
 	bool firstendgames = false;
 
 	int bloodcount = 0;
+	int bonuscount = 0;
 	//GUI
 	sf::Font font;
 	sf::Font Lamooned;
@@ -61,16 +62,21 @@ private:
 	int directioncheck;
 	unsigned pointed;
 	unsigned point;
+	int keepbonus;
 
 	sf::Clock deadtimes;
 
 	sf::Clock nextpage;
 	sf::Clock speedincrease;
+	sf::Clock speeditemincrease;
 	sf::Clock pushbackenemy;
+	sf::Clock pushbackitem;
+	sf::Clock Timebonus;
 
 	float plusSpeed=0.f;
+	float speeditem = 0.f;
 
-
+	bool bonus = false;
 	//Resources
 	std::map <std::string, sf::Texture*>textures;
 	std::vector<Enemy*> enemies;

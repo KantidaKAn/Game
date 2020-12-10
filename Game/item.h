@@ -23,9 +23,7 @@ public:
 	const sf::FloatRect getBounds() const;
 	
 	const int gettype() const;
-
-	void updatemovement();
-	void updated();
+	void updated(float plus);
 	void render(sf::RenderTarget& target);
 };
 #endif //!ITEM_H

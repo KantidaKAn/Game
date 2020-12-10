@@ -8,6 +8,10 @@ void item::inititemTexture()
 	else if (types == 1) {
 		this->itemtexture.loadFromFile("Cat/blood.png");
 	}
+	else if (types==2)
+	{
+		this->itemtexture.loadFromFile("Cat/food.png");
+	}
 }
 
 void item::inititemSprite()
@@ -20,6 +24,10 @@ void item::inititemSprite()
 	else if (types == 1) {
 		this->itemsprite.setTexture(this->itemtexture);
 		this->itemsprite.setScale(0.3f, 0.3f);
+	}
+	else if (types == 2) {
+		this->itemsprite.setTexture(this->itemtexture);
+		this->itemsprite.setScale(0.5f, 0.5f);
 	}
 }
 
@@ -50,14 +58,13 @@ const int item::gettype() const
 	return this->types;
 }
 
-void item::updatemovement()
-{
-	this->itemsprite.move(-3.0f, 0.f);
-}
 
-void item::updated()
+
+
+
+void item::updated(float plus)
 {
-	this->updatemovement();
+	this->itemsprite.move(-3.0f-plus, 0.f);
 }
 
 void item::render(sf::RenderTarget& target)

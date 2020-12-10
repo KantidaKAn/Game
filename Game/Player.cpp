@@ -29,7 +29,7 @@ void Player::initSprite()
 	this->playerposition = sf::Vector2f(100, 300);
 	this->playersprite.setPosition(sf::Vector2f(this->playerposition));
 	this->rectangle.setSize(sf::Vector2f(60.f, 100.f));
-	this->rectangle.setFillColor(sf::Color::Green);
+	this->rectangle.setFillColor(sf::Color::Transparent);
 	this->rectangle.setPosition(this->playerposition.x+80,this->playerposition.y+70);
 }
 
@@ -89,7 +89,9 @@ const sf::FloatRect Player::getBounds() const
 void Player::setPosition(const float x, const float y)
 {
 	this->playersprite.setPosition(x, y);
-	this->rectangle.setPosition(x+80, y+70);
+	this->rectangle.setPosition(x + 80, y + 70);
+	this->playerposition.x = x;
+	this->playerposition.y = y;
 }
 
 void Player::resetVelocityY()
