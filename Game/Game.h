@@ -13,6 +13,8 @@
 #include<algorithm>
 #include<vector>
 #include<iostream>
+#include<SFML/Audio.hpp>
+
 
 using namespace std;
 class Game
@@ -64,8 +66,20 @@ private:
 	unsigned point;
 	int keepbonus;
 
-	sf::Clock deadtimes;
+	sf::Music musicBG;
 
+	sf::SoundBuffer Kradod;
+	sf::Sound KADO;
+	sf::SoundBuffer ButtonClick;
+	sf::Sound ButtonClicking;
+	sf::SoundBuffer snack;
+	sf::Sound SNACKS;
+	sf::SoundBuffer SORE;
+	sf::Sound sores;
+	sf::SoundBuffer die;
+	sf::Sound GameOver;
+
+	sf::Clock deadtimes;
 	sf::Clock nextpage;
 	sf::Clock speedincrease;
 	sf::Clock speeditemincrease;

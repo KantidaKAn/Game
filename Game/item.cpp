@@ -10,7 +10,7 @@ void item::inititemTexture()
 	}
 	else if (types==2)
 	{
-		this->itemtexture.loadFromFile("Cat/food.png");
+		this->itemtexture.loadFromFile("Cat/B.png");
 	}
 }
 

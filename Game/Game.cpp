@@ -57,6 +57,24 @@ void Game::initGUI()
 void Game::initsystems()
 {
 	this->pointed = 0;
+
+	this->Kradod.loadFromFile("Sound/Jumping.wav");
+	this->KADO.setBuffer(this->Kradod);
+
+	this->ButtonClick.loadFromFile("Sound/Click.wav");
+	this->ButtonClicking.setBuffer(this->ButtonClick);
+
+	this->snack.loadFromFile("Sound/Item.wav");
+	this->SNACKS.setBuffer(this->snack);
+
+	this->SORE.loadFromFile("Sound/sore.wav");
+	this->sores.setBuffer(this->SORE);
+
+	this->die.loadFromFile("Sound/Game Over.wav");
+	this->GameOver.setBuffer(this->die);
+
+	musicBG.openFromFile("Sound/Bongo cat.wav");
+	musicBG.setVolume(30);
 }
 
 
@@ -131,6 +149,8 @@ void Game::run()
 
 
 	sf::Event e;
+	musicBG.play();
+	musicBG.setLoop(true);
 	while (this->window->isOpen())
 	{
 
@@ -162,6 +182,7 @@ void Game::run()
 			}
 			if (this->mainmenu->getBounds_0().contains(this->mousePosview)) {
 				this->mainmenu->buttoncheck(0);
+				this->ButtonClicking.play();
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 					if (playstatus) {
 						gamestate = 1;
@@ -172,18 +193,21 @@ void Game::run()
 			}
 			else if (this->mainmenu->getBounds_1().contains(this->mousePosview)) {
 				this->mainmenu->buttoncheck(1);
+				this->ButtonClicking.play();
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 					gamestate = 2;
 				}
 			}
 			else if (this->mainmenu->getBounds_2().contains(this->mousePosview)) {
 				this->mainmenu->buttoncheck(2);
+				this->ButtonClicking.play();
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 					gamestate = 3;
 				}
 			}
 			else if (this->mainmenu->getBounds_3().contains(this->mousePosview)) {
 				this->mainmenu->buttoncheck(3);
+				this->ButtonClicking.play();
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 					this->window->close();
 				}
@@ -202,7 +226,7 @@ void Game::run()
 				this->render();
 				cangetnewscores = true;
 			}
-			else if (this->player->getHp() == 0 && deadtimes.getElapsedTime().asSeconds() <= 3.f) {
+			else if (this->player->getHp() == 0 && deadtimes.getElapsedTime().asSeconds() <= 5.f) {
 				this->mainmenu->drawdie(*this->window);
 			}
 			else if (this->player->getHp() == 0 && cangetnewscores && deadtimes.getElapsedTime().asSeconds() > 3.f) {
@@ -332,10 +356,10 @@ void Game::updateItem()
 	}
 	if (this->spawntimeitem >= this->spawntimeitemMax)
 	{
-		if (this->bloodcount >= 50) {
+		if (this->bloodcount >= 20) {
 			this->ITEM.push_back(new item(2000, rand() % (500 - 175) + 175, 1));
 			this->spawntimeitem = 0.f;
-			this->bloodcount -= 50;
+			this->bloodcount -= 20;
 		}
 		else if (bonus == true) {
 			this->ITEM.push_back(new item(2000, rand() % (500 - 175) + 175, 2));
@@ -355,6 +379,7 @@ void Game::updateItem()
 		this->ITEM[i]->updated(speeditem); 
 		if (this->player->getBounds().intersects(this->ITEM[i]->getBounds())&&this->ITEM[i]->gettype()==0)
 		{
+			this->SNACKS.play();
 			this->ITEM.erase(this->ITEM.begin() + i);
 			this->pointed += 3;
 			item_removed = true;
@@ -387,12 +412,6 @@ void Game::updateItem()
 			this->pushbackitem.restart();
 			this->spawntimeitemMax = 4.f;
 			this->speeditem = 0.f;
-		}
-		if (bonuscount%100==0 && bonuscount!=0) {
-			this->Timebonus.restart();
-			this->bonus = true;
-			bonuscount -= 10;
-			keepbonus++;
 		}
 	}
 }
@@ -499,6 +518,7 @@ void Game::updateEnemiesandcombat()
 		}
 		if (this->player->getBounds().intersects(this->enemies[i]->getBounds()))
 		{
+			this->sores.play();
 			this->player->loseHp(10);
 			this->enemies.erase(this->enemies.begin() + i);
 			enemy_removed = true;
@@ -551,11 +571,6 @@ void Game::updateGUI()
 		this->deadtimes.restart();
 	}
 
-	if (bonus == true && this->Timebonus.getElapsedTime().asSeconds() >= 5.f) {
-		bonus = false;
-		std::cout << "no bonus";
-		(this->keepbonus)--;
-	}
 }
 
 //render player
