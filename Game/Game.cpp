@@ -61,6 +61,9 @@ void Game::initGUI()
 
 	this->pic3["EASTER3"] = new sf::Texture();
 	this->pic3["EASTER3"]->loadFromFile("Cat/pic3.png");
+
+	this->pic4["EASTER4"] = new sf::Texture();
+	this->pic4["EASTER4"]->loadFromFile("Cat/pic4.png");
 }
 
 void Game::initsystems()
@@ -213,7 +216,7 @@ void Game::run()
 
 			if (this->mainmenu->easterbound().contains(this->mousePosview)) {
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Right)&&eastereggtimes.getElapsedTime().asSeconds()>5.f) {
-					random = rand()%3+1;
+					random = rand()%4+1;
 					if (random == 1) {
 						this->easter_egg.push_back(new Pics(this->pic["EASTER"], 900, 720));
 						this->eastereggtimes.restart();
@@ -224,6 +227,10 @@ void Game::run()
 					}
 					else if (random == 3) {
 						this->easter_egg3.push_back(new Pics(this->pic3["EASTER3"], 900, 720));
+						this->eastereggtimes.restart();
+					}
+					else if (random == 4) {
+						this->easter_egg4.push_back(new Pics(this->pic4["EASTER4"], 820, 720));
 						this->eastereggtimes.restart();
 					}
 				}
@@ -759,6 +766,19 @@ void Game::updateeasteregg()
 	}
 	for (auto* easter3 : this->easter_egg3) {
 		easter3->render(this->window);
+	}
+	unsigned counters4 = 0;
+	for (auto* easter4 : this->easter_egg4) {
+		easter4->update();
+		if (easter4->getBounds().top + easter4->getBounds().height < 0.f) {
+			delete this->easter_egg4.at(counters4);
+			this->easter_egg4.erase(this->easter_egg4.begin() + counters4);
+			--counters4;
+		}
+		++counters4;
+	}
+	for (auto* easter4 : this->easter_egg4) {
+		easter4->render(this->window);
 	}
 }
 
