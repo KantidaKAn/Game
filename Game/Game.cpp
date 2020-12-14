@@ -91,6 +91,22 @@ void Game::initsystems()
 
 	musicBG.openFromFile("Sound/Bongo cat.wav");
 	musicBG.setVolume(30);
+	//menu
+	playername = false;
+	playstatus = false;
+	cangetnewscores = false;
+	firstendgames = false;
+	//event
+	sounddies = true;
+
+	//sound
+	opensound = true;
+
+	//bonus
+	bigbool = false;
+	goldencat = false;
+
+	canswitch = true;
 }
 
 
@@ -132,7 +148,18 @@ Game::~Game()
 	{
 		delete i.second;
 	}
-
+	for (auto& i : this->pic2)
+	{
+		delete i.second;
+	}
+	for (auto& i : this->pic3)
+	{
+		delete i.second;
+	}
+	for (auto& i : this->pic4)
+	{
+		delete i.second;
+	}
 	//Delete item
 	for (auto* i : this->ITEM) 
 	{
@@ -145,6 +172,18 @@ Game::~Game()
 		delete i;
 	}
 	for (auto* i : this->easter_egg)
+	{
+		delete i;
+	}
+	for (auto* i : this->easter_egg2)
+	{
+		delete i;
+	}
+	for (auto* i : this->easter_egg3)
+	{
+		delete i;
+	}
+	for (auto* i : this->easter_egg4)
 	{
 		delete i;
 	}

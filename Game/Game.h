@@ -37,10 +37,10 @@ private:
 	string name[6];
 	vector<pair<int, string>>userScore;
 	int gamestate = 0;
-	bool playername = false;
-	bool playstatus = false;
-	bool cangetnewscores = false;
-	bool firstendgames = false;
+	bool playername;
+	bool playstatus;
+	bool cangetnewscores;
+	bool firstendgames;
 
 	int bloodcount = 0;
 
@@ -66,8 +66,8 @@ private:
 	unsigned pointed;
 	unsigned point;
 
-	bool sounddies = true;
-	bool goldencat = false;
+	bool sounddies;
+	bool goldencat;
 	sf::Music musicBG;
 
 	sf::SoundBuffer ButtonClick;
@@ -119,9 +119,9 @@ private:
 	void initGUI();
 	void initsystems();
 
-	bool bigbool = false;
+	bool bigbool;
 	bool canswitch;
-	bool opensound = true;
+	bool opensound;
 
 public:
 	//Game
