@@ -344,12 +344,7 @@ void Game::updatePlayer()
 
 void Game::updateItem()
 {
-	if (this->keepbonus>0) {
-		this->spawntimeitem += 1.0f;
-	}
-	else {
-		this->spawntimeitem += 0.1f;
-	}
+	this->spawntimeitem += 0.1f;
 	if (this->pushbackitem.getElapsedTime().asSeconds() >= 20.f) {
 		this->spawntimeitemMax -= 0.4f;
 		this->pushbackitem.restart();
@@ -360,10 +355,6 @@ void Game::updateItem()
 			this->ITEM.push_back(new item(2000, rand() % (500 - 175) + 175, 1));
 			this->spawntimeitem = 0.f;
 			this->bloodcount -= 20;
-		}
-		else if (bonus == true) {
-			this->ITEM.push_back(new item(2000, rand() % (500 - 175) + 175, 2));
-			this->spawntimeitem = 0.f;
 		}
 		else {
 			this->ITEM.push_back(new item(2000, rand() % (500 - 175) + 175, 0));
@@ -384,9 +375,6 @@ void Game::updateItem()
 			this->pointed += 3;
 			item_removed = true;
 			this->bloodcount++;
-			if (bonus == false) {
-				this->bonuscount++;
-			}
 		}
 		if (this->player->getBounds().intersects(this->ITEM[i]->getBounds()) && this->ITEM[i]->gettype() == 1)
 		{
@@ -483,10 +471,8 @@ void Game::update()
 
 void Game::updateEnemiesandcombat()
 {
-	if (this->bonus == false) {
-		this->spawnTimerEnemies += 0.5f;
-	}
-	if (this->pushbackenemy.getElapsedTime().asSeconds() >= 20.f && this->bonus == false) {
+	this->spawnTimerEnemies += 0.5f;
+	if (this->pushbackenemy.getElapsedTime().asSeconds() >= 20.f) {
 		this->spawnTimerEnemiesMax -= 5.f;
 		this->pushbackenemy.restart();
 	}
@@ -522,18 +508,6 @@ void Game::updateEnemiesandcombat()
 			this->player->loseHp(10);
 			this->enemies.erase(this->enemies.begin() + i);
 			enemy_removed = true;
-		}
-		if (bonus == true) {
-			if (enemies.size() == 1) {
-				this->enemies.erase(this->enemies.begin());
-				std::cout << "delete" << endl;
-			}
-			else {
-				if (i == 0) {
-					this->enemies.erase(this->enemies.begin());
-				}
-				this->enemies.erase(this->enemies.begin() + i);
-			}
 		}
 		if (this->player->getHp() == 0) {
 			if (enemies.size() == 1) {
