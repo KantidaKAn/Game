@@ -3,7 +3,7 @@
 Pics::Pics(sf::Texture* texture, float pos_x, float pos_y)
 {
 	this->shape.setTexture(*texture);
-	//this->shape.setScale(2.0f * x, 2.0f * y);
+	this->shape.setScale(0.5f,0.5f);
 	this->shape.setPosition(pos_x, pos_y);
 }
 

@@ -55,6 +55,9 @@ void Game::initGUI()
 
 	this->pic["EASTER"] = new sf::Texture();
 	this->pic["EASTER"]->loadFromFile("Cat/63010069.png");
+
+	this->pic2["EASTER2"] = new sf::Texture();
+	this->pic2["EASTER2"]->loadFromFile("Cat/pic2.png");
 }
 
 void Game::initsystems()
@@ -119,7 +122,10 @@ Game::~Game()
 	{
 		delete i.second;
 	}
-
+	for (auto& i : this->pic)
+	{
+		delete i.second;
+	}
 
 	//Delete item
 	for (auto* i : this->ITEM) 
@@ -129,6 +135,10 @@ Game::~Game()
 
 	//Delete enemies
 	for (auto* i : this->enemies) 
+	{
+		delete i;
+	}
+	for (auto* i : this->easter_egg)
 	{
 		delete i;
 	}
@@ -198,18 +208,26 @@ void Game::run()
 			this->mainmenu->update();
 			this->mainmenu->draw(*this->window);
 
-			if (checkname && !(playstatus)) {
-				this->mainmenu->drawnamespace(*this->window);
-				playernametextbox.drawTo(*this->window);
-			}
 			if (this->mainmenu->easterbound().contains(this->mousePosview)) {
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Right)&&eastereggtimes.getElapsedTime().asSeconds()>5.f) {
-					this->easter_egg.push_back(new Pics(this->pic["EASTER"],760,720));
-					this->eastereggtimes.restart();
+					random = rand()%2+1;
+					if (random == 1) {
+						this->easter_egg.push_back(new Pics(this->pic["EASTER"], 900, 720));
+						this->eastereggtimes.restart();
+					}
+					else if (random == 2) {
+						this->easter_egg2.push_back(new Pics(this->pic2["EASTER2"], 900, 720));
+						this->eastereggtimes.restart();
+					}
 				}
 			}
 			this->updateeasteregg();
 			this->mainmenu->drawpics(*this->window);
+
+			if (checkname && !(playstatus)) {
+				this->mainmenu->drawnamespace(*this->window);
+				playernametextbox.drawTo(*this->window);
+			}
 			if (this->mainmenu->soundoffbound().contains(this->mousePosview)) {
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 					this->opensound = false;
@@ -708,6 +726,19 @@ void Game::updateeasteregg()
 	}
 	for (auto* easter : this->easter_egg) {
 		easter->render(this->window);
+	}
+	unsigned counters2 = 0;
+	for (auto* easter2 : this->easter_egg2) {
+		easter2->update();
+		if (easter2->getBounds().top + easter2->getBounds().height < 0.f) {
+			delete this->easter_egg2.at(counters);
+			this->easter_egg2.erase(this->easter_egg2.begin() + counters2);
+			--counters2;
+		}
+		++counters2;
+	}
+	for (auto* easter2 : this->easter_egg2) {
+		easter2->render(this->window);
 	}
 }
 

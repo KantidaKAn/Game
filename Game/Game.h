@@ -97,10 +97,14 @@ private:
 	float plusSpeed=0.f;
 	float speeditem = 0.f;
 
+	int random;
 	//Resources
 	std::map <std::string, sf::Texture*>textures;
 	std::map<std::string, sf::Texture*> pic;
 	std::vector<Pics*> easter_egg;
+	std::map<std::string, sf::Texture*> pic2;
+	std::vector<Pics*> easter_egg2;
+
 	std::vector<Enemy*> enemies;
 	std::vector<item*>ITEM;
 	//Function
