@@ -3,6 +3,7 @@
 #include <SFML/System.hpp>
 #include <stdlib.h>
 #include <iostream>
+#include<SFML/Audio.hpp>
 enum PlAYER_ANIMATION_STATES { IDLE = 0, MOVING_LEFT, MOVING_RIGHT, MOVING_TOP, MOVING_DOWN }; //for check player direction 
 class Player
 {
@@ -22,8 +23,14 @@ private:
 	short animState;
 	sf::IntRect currentFrame; //for show next sprite
 	sf::Vector2f playerposition;
+	sf::Vector2f playerpositionkeep;
+
+	sf::SoundBuffer Kradod;
+	sf::Sound KADO;
+
 	bool animationSwitc;
 
+	bool setbig = false;
 	//Physics
 	sf::Vector2f velocity;
 	float velocityMax;
@@ -88,6 +95,7 @@ public:
 	bool gravityBool = false;
 	const bool canAttack();
 
+	void getsize(float x,float y);
 	//Player update and render
 	void updateAttack();
 	void updated();

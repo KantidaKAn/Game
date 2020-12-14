@@ -58,9 +58,6 @@ void Game::initsystems()
 {
 	this->pointed = 0;
 
-	this->Kradod.loadFromFile("Sound/Jumping.wav");
-	this->KADO.setBuffer(this->Kradod);
-
 	this->ButtonClick.loadFromFile("Sound/Click.wav");
 	this->ButtonClicking.setBuffer(this->ButtonClick);
 
@@ -73,14 +70,19 @@ void Game::initsystems()
 	this->die.loadFromFile("Sound/Game Over.wav");
 	this->GameOver.setBuffer(this->die);
 
+	this->Heal.loadFromFile("Sound/Blood.wav");
+	this->blood.setBuffer(this->Heal);
+
+	this->piwpiw.loadFromFile("Sound/piw.wav");
+	this->piw.setBuffer(this->piwpiw);
+
+
 	musicBG.openFromFile("Sound/Bongo cat.wav");
 	musicBG.setVolume(30);
 }
 
 
 //start BG
-
-//start bullet
 
 //Main starter functions
 Game::Game()
@@ -182,7 +184,11 @@ void Game::run()
 			}
 			if (this->mainmenu->getBounds_0().contains(this->mousePosview)) {
 				this->mainmenu->buttoncheck(0);
-				this->ButtonClicking.play();
+				if (canswitch) {
+					this->ButtonClicking.play();
+					canswitch = false;
+				}
+
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 					if (playstatus) {
 						gamestate = 1;
@@ -193,24 +199,36 @@ void Game::run()
 			}
 			else if (this->mainmenu->getBounds_1().contains(this->mousePosview)) {
 				this->mainmenu->buttoncheck(1);
-				this->ButtonClicking.play();
+				if (canswitch) {
+					this->ButtonClicking.play();
+					canswitch = false;
+				}
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 					gamestate = 2;
 				}
 			}
 			else if (this->mainmenu->getBounds_2().contains(this->mousePosview)) {
 				this->mainmenu->buttoncheck(2);
-				this->ButtonClicking.play();
+				if (canswitch) {
+					this->ButtonClicking.play();
+					canswitch = false;
+				}
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 					gamestate = 3;
 				}
 			}
 			else if (this->mainmenu->getBounds_3().contains(this->mousePosview)) {
 				this->mainmenu->buttoncheck(3);
-				this->ButtonClicking.play();
+				if (canswitch) {
+					this->ButtonClicking.play();
+					canswitch = false;
+				}
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 					this->window->close();
 				}
+			}
+			else {
+				this->canswitch = true;
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && checkname) {
 				playstatus = true;
@@ -218,6 +236,11 @@ void Game::run()
 				gamestate = 1;
 				this->mainmenu->getplay(playstatus);
 				name[5] = playernametextbox.gettext();
+				this->speedincrease.restart();
+				this->speeditemincrease.restart();
+				this->pushbackenemy.restart();
+				this->pushbackitem.restart();
+				this->randomskills.restart();
 			}
 		}
 		else if (gamestate == 1) {
@@ -227,6 +250,11 @@ void Game::run()
 				cangetnewscores = true;
 			}
 			else if (this->player->getHp() == 0 && deadtimes.getElapsedTime().asSeconds() <= 5.f) {
+				if (sounddies == true) {
+					this->GameOver.play();
+					sounddies = false;
+					this->musicBG.pause();
+				}
 				this->mainmenu->drawdie(*this->window);
 			}
 			else if (this->player->getHp() == 0 && cangetnewscores && deadtimes.getElapsedTime().asSeconds() > 3.f) {
@@ -253,6 +281,8 @@ void Game::run()
 				firstendgames = true;
 				checkname = false;
 				pointed = 0;
+				sounddies = true;
+				this->musicBG.play();
 			}
 		}
 		else if (gamestate == 2) {
@@ -344,28 +374,54 @@ void Game::updatePlayer()
 
 void Game::updateItem()
 {
-	this->spawntimeitem += 0.1f;
-	if (this->pushbackitem.getElapsedTime().asSeconds() >= 20.f) {
+	if (goldencat==true) {
+		this->spawntimeitem += 0.2f;
+	}
+	else {
+		this->spawntimeitem += 0.1f;
+	}
+	if (this->pushbackitem.getElapsedTime().asSeconds() >= 20.f)
+	{
 		this->spawntimeitemMax -= 0.4f;
 		this->pushbackitem.restart();
 	}
 	if (this->spawntimeitem >= this->spawntimeitemMax)
 	{
-		if (this->bloodcount >= 20) {
-			this->ITEM.push_back(new item(2000, rand() % (500 - 175) + 175, 1));
+		if (this->bloodcount >= 20) 
+		{
+			this->ITEM.push_back(new item(2000, rand() % (600 - 175) + 175, 1));
 			this->spawntimeitem = 0.f;
 			this->bloodcount -= 20;
 		}
-		else {
-			this->ITEM.push_back(new item(2000, rand() % (500 - 175) + 175, 0));
+		if (goldencat == true) {
+			this->ITEM.push_back(new item(2000, rand() % (600 - 175) + 175, 4));
+			this->spawntimeitem = 0.f;
+		}
+		else 
+		{
+			this->ITEM.push_back(new item(2000, rand() % (600 - 175) + 175, 0));
 			this->spawntimeitem = 0.f;
 		}
 	}
-	if (this->speeditemincrease.getElapsedTime().asSeconds() >= 10.f) {
+	if (this->randomskills.getElapsedTime().asSeconds() > 20.f) 
+	{
+		int ran =1;
+		if (ran == 0) {
+			this->ITEM.push_back(new item(2000, rand() % (600 - 175) + 175, 2));
+		}
+		else if (ran == 1) {
+			this->ITEM.push_back(new item(2000, rand() % (600 - 175) + 175, 3));
+			std::cout << "push" << endl;
+		}
+		this->randomskills.restart();
+	}
+	if (this->speeditemincrease.getElapsedTime().asSeconds() >= 10.f)
+	{
 		this->speeditem += 1.f;
 		this->speeditemincrease.restart();
 	}
-	for (int i = 0; i < this->ITEM.size(); ++i) {
+	for (int i = 0; i < this->ITEM.size(); ++i)
+	{
 		bool item_removed = false;
 		this->ITEM[i]->updated(speeditem); 
 		if (this->player->getBounds().intersects(this->ITEM[i]->getBounds())&&this->ITEM[i]->gettype()==0)
@@ -378,26 +434,55 @@ void Game::updateItem()
 		}
 		if (this->player->getBounds().intersects(this->ITEM[i]->getBounds()) && this->ITEM[i]->gettype() == 1)
 		{
+			this->blood.play();
 			this->ITEM.erase(this->ITEM.begin() + i);
 			this->player->permHp(20);
+			item_removed = true;
+		}
+		if (this->player->getBounds().intersects(this->ITEM[i]->getBounds()) && this->ITEM[i]->gettype() == 2)
+		{
+			this->SNACKS.play();
+			this->ITEM.erase(this->ITEM.begin() + i);
+			this->player->getsize(0.6f, 0.6f);
+			this->bigbool = true;
+			this->Bigtimes.restart();
+			item_removed = true;
+		}
+		if (this->player->getBounds().intersects(this->ITEM[i]->getBounds()) && this->ITEM[i]->gettype() == 3)
+		{
+			goldencat = true;
+			goldencattimes.restart();
+			this->ITEM.erase(this->ITEM.begin() + i);
+			item_removed = true;
+		}
+		if (this->player->getBounds().intersects(this->ITEM[i]->getBounds()) && this->ITEM[i]->gettype() == 4)
+		{
+			this->pointed += 10;
+			this->bloodcount++;
+			this->ITEM.erase(this->ITEM.begin() + i);
 			item_removed = true;
 		}
 		if (this->ITEM[i]->getBounds().left + ITEM[i]->getBounds().width < 0.f) {
 			this->ITEM.erase(this->ITEM.begin() + i);
 			item_removed = true;
 		}
-		if (this->player->getHp() == 0) {
-			if (ITEM.size() == 1) {
+		if (this->player->getHp() == 0)
+		{
+			if (ITEM.size() == 1)
+			{
 				this->ITEM.erase(this->ITEM.begin());
 				std::cout << "delete" << endl;
 			}
 			else {
-				if (i == 0) {
+				if (i == 0) 
+				{
 					this->ITEM.erase(this->ITEM.begin());
 				}
 				this->ITEM.erase(this->ITEM.begin() + i);
 			}
 			this->pushbackitem.restart();
+			this->bigbool = false;
+			this->goldencat = false;
 			this->spawntimeitemMax = 4.f;
 			this->speeditem = 0.f;
 		}
@@ -407,13 +492,23 @@ void Game::updateItem()
 void Game::updateCollision()
 {
 	//collision bottom of screen
-	if (this->player->getpos().y + this->player->getBounds().height + 200 > this->window->getSize().y)
+	if (this->player->getpos().y + this->player->getBounds().height + 250 > 720.f && bigbool == true)
 	{
 		this->player->resetVelocityY();
-		this->player->setPosition(this->player->getpos().x, this->window->getSize().y - this->player->getBounds().height - 200);
+		this->player->setPosition(this->player->getpos().x, 720.f - this->player->getBounds().height - 250);
 		this->player->jumping = false;
 		this->player->jumpingUp = false;
 		this->player->gravityBool = false;
+
+	}
+	else if (this->player->getpos().y + this->player->getBounds().height + 200 > 720.f && bigbool == false)
+	{
+		this->player->resetVelocityY();
+		this->player->setPosition(this->player->getpos().x, 720.f - this->player->getBounds().height - 200);
+		this->player->jumping = false;
+		this->player->jumpingUp = false;
+		this->player->gravityBool = false;
+
 	}
 }
 
@@ -504,8 +599,14 @@ void Game::updateEnemiesandcombat()
 		}
 		if (this->player->getBounds().intersects(this->enemies[i]->getBounds()))
 		{
-			this->sores.play();
-			this->player->loseHp(10);
+			if (this->bigbool == false) {
+				this->sores.play();
+				this->player->loseHp(10);
+			}
+			else if (this->bigbool == true) {
+				this->piw.play();
+				this->pointed += 10;
+			}
 			this->enemies.erase(this->enemies.begin() + i);
 			enemy_removed = true;
 		}
@@ -545,6 +646,13 @@ void Game::updateGUI()
 		this->deadtimes.restart();
 	}
 
+	if (this->Bigtimes.getElapsedTime().asSeconds() > 5.0f && bigbool == true) {
+		bigbool = false;
+		this->player->getsize(0.3f, 0.3f);
+	}
+	if (this->goldencattimes.getElapsedTime().asSeconds() > 10.f && goldencat == true) {
+		goldencat = false;
+	}
 }
 
 //render player

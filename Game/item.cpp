@@ -2,15 +2,25 @@
 
 void item::inititemTexture()
 {
-	if (types == 0) {
+	if (types == 0) 
+	{
 		this->itemtexture.loadFromFile("Cat/Candy.png");
 	}
-	else if (types == 1) {
+	else if (types == 1) 
+	{
 		this->itemtexture.loadFromFile("Cat/blood.png");
 	}
 	else if (types==2)
 	{
 		this->itemtexture.loadFromFile("Cat/B.png");
+	}
+	else if (types == 3) 
+	{
+		this->itemtexture.loadFromFile("Cat/chik.png");
+	}
+	else if (types == 4)
+	{
+		this->itemtexture.loadFromFile("Cat/cats.png");
 	}
 }
 
@@ -28,6 +38,14 @@ void item::inititemSprite()
 	else if (types == 2) {
 		this->itemsprite.setTexture(this->itemtexture);
 		this->itemsprite.setScale(0.5f, 0.5f);
+	}
+	else if (types == 3) {
+		this->itemsprite.setTexture(this->itemtexture);
+		this->itemsprite.setScale(1.f, 1.f);
+	}
+	else if (types == 4) {
+		this->itemsprite.setTexture(this->itemtexture);
+		this->itemsprite.setScale(1.f, 1.f);
 	}
 }
 

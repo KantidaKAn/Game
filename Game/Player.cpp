@@ -64,6 +64,9 @@ Player::Player()
 
 	//player physics
 	this->initPhysics();
+
+	this->Kradod.loadFromFile("Sound/Jumping.wav");
+	this->KADO.setBuffer(this->Kradod);
 }
 
 Player::~Player()
@@ -89,7 +92,12 @@ const sf::FloatRect Player::getBounds() const
 void Player::setPosition(const float x, const float y)
 {
 	this->playersprite.setPosition(x, y);
-	this->rectangle.setPosition(x + 80, y + 70);
+	if (setbig == false) {
+		this->rectangle.setPosition(x + 80, y + 70);
+	}
+	else if (setbig == true) {
+		this->rectangle.setPosition(x + 160, y + 140);
+	}
 	this->playerposition.x = x;
 	this->playerposition.y = y;
 }
@@ -146,9 +154,14 @@ void Player::updatePhysics()
 	}
 
 	this->playersprite.move(this->velocity);
-	this->rectangle.move(this->velocity);
 	this->playerposition.x += velocity.x;
 	this->playerposition.y += velocity.y;
+	if (this->setbig == false) {
+		this->rectangle.setPosition(this->playerposition.x + 80, this->playerposition.y + 70);
+	}
+	else if(this->setbig == true) {
+		this->rectangle.setPosition(this->playerposition.x + 160, this->playerposition.y + 140);
+	}
 }
 
 //get HP of player
@@ -197,6 +210,7 @@ void Player::updatemovement()
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && this->jumping == false)
 	{
+		this->KADO.play();
 		this->jumping = true;
 		this->jumpingUp = true;
 		this->gravityBool = true;
@@ -264,6 +278,19 @@ const bool Player::canAttack()
 		return true;
 	}
 	return false;
+}
+
+void Player::getsize(float x, float y)
+{
+	this->playersprite.setScale(x, y);
+	if (x == 0.6f && y == 0.6f) {
+		this->rectangle.setScale(2.f, 2.f);
+		this->setbig = true;
+	}
+	else if (x == 0.3f && y == 0.3f) {
+		this->rectangle.setScale(1.f, 1.f);
+		this->setbig = false;
+	}
 }
 
 void Player::updateAttack()

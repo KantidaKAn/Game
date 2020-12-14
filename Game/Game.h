@@ -65,10 +65,10 @@ private:
 	unsigned pointed;
 	unsigned point;
 
+	bool sounddies = true;
+	bool goldencat = false;
 	sf::Music musicBG;
 
-	sf::SoundBuffer Kradod;
-	sf::Sound KADO;
 	sf::SoundBuffer ButtonClick;
 	sf::Sound ButtonClicking;
 	sf::SoundBuffer snack;
@@ -77,6 +77,10 @@ private:
 	sf::Sound sores;
 	sf::SoundBuffer die;
 	sf::Sound GameOver;
+	sf::SoundBuffer Heal;
+	sf::Sound blood;
+	sf::SoundBuffer piwpiw;
+	sf::Sound piw;
 
 	sf::Clock deadtimes;
 	sf::Clock nextpage;
@@ -84,6 +88,9 @@ private:
 	sf::Clock speeditemincrease;
 	sf::Clock pushbackenemy;
 	sf::Clock pushbackitem;
+	sf::Clock randomskills;
+	sf::Clock Bigtimes;
+	sf::Clock goldencattimes;
 
 	float plusSpeed=0.f;
 	float speeditem = 0.f;
@@ -101,7 +108,8 @@ private:
 	void initGUI();
 	void initsystems();
 
-
+	bool bigbool = false;
+	bool canswitch;
 
 public:
 	//Game
