@@ -405,7 +405,7 @@ void Game::updateItem()
 	}
 	if (this->randomskills.getElapsedTime().asSeconds() > 20.f) 
 	{
-		int ran =1;
+		int ran =rand()%2;
 		if (ran == 0) {
 			this->ITEM.push_back(new item(2000, rand() % (600 - 175) + 175, 2));
 		}
@@ -450,6 +450,7 @@ void Game::updateItem()
 		}
 		if (this->player->getBounds().intersects(this->ITEM[i]->getBounds()) && this->ITEM[i]->gettype() == 3)
 		{
+			this->SNACKS.play();
 			goldencat = true;
 			goldencattimes.restart();
 			this->ITEM.erase(this->ITEM.begin() + i);
