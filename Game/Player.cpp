@@ -32,7 +32,7 @@ void Player::initSprite()
 	this->rectangle.setFillColor(sf::Color::Transparent);
 	this->rectangle.setPosition(this->playerposition.x+80,this->playerposition.y+70);
 	this->rectangle.setOutlineThickness(-1.f);
-	this->rectangle.setFillColor(sf::Color::Transparent);
+	this->rectangle.setOutlineColor(sf::Color::Transparent);
 }
 
 //settings animation timer 
