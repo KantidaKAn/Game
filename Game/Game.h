@@ -110,6 +110,7 @@ private:
 
 	bool bigbool = false;
 	bool canswitch;
+	bool opensound = true;
 
 public:
 	//Game

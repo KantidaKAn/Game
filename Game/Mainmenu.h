@@ -22,6 +22,11 @@ private:
 	sf::Sprite howtoplaysprites[5];
 	sf::Texture dietexture;
 	sf::Sprite diespite;
+	sf::Texture onoffsoundt;
+	sf::Sprite onoffsounds;
+
+	sf::RectangleShape soundoff;
+	sf::RectangleShape soundon;
 	bool playstate = false;
 	int pages = 0;
 
@@ -43,6 +48,9 @@ public:
 
 	const sf::FloatRect nextgetbounds() const;
 	const sf::FloatRect beforegetbounds() const;
+
+	const sf::FloatRect soundoffbound() const;
+	const sf::FloatRect soundonbound() const;
 	void update();
 	void howtoplay(sf::RenderWindow& window);
 	void nextpages();

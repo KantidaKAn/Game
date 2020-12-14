@@ -155,7 +155,6 @@ void Game::run()
 	musicBG.setLoop(true);
 	while (this->window->isOpen())
 	{
-
 		while (this->window->pollEvent(e))
 		{
 			switch (e.type)
@@ -171,7 +170,24 @@ void Game::run()
 					checkname = false;
 				}
 			}
-
+		}
+		if (opensound == true) {
+			ButtonClicking.setVolume(30);
+			SNACKS.setVolume(30);
+			sores.setVolume(30);
+			GameOver.setVolume(30);
+			blood.setVolume(30);
+			piw.setVolume(30);
+			musicBG.setVolume(30);
+		}
+		else if (opensound == false) {
+			ButtonClicking.setVolume(0);
+			SNACKS.setVolume(0);
+			sores.setVolume(0);
+			GameOver.setVolume(0);
+			blood.setVolume(0);
+			piw.setVolume(0);
+			musicBG.setVolume(0);
 		}
 		this->window->clear(); //for clear old frame
 		this->updateMousePositions();
@@ -181,6 +197,16 @@ void Game::run()
 			if (checkname && !(playstatus)) {
 				this->mainmenu->drawnamespace(*this->window);
 				playernametextbox.drawTo(*this->window);
+			}
+			if (this->mainmenu->soundoffbound().contains(this->mousePosview)) {
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+					this->opensound = false;
+				}
+			}
+			else if (this->mainmenu->soundonbound().contains(this->mousePosview)) {
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+					this->opensound = true;
+				}
 			}
 			if (this->mainmenu->getBounds_0().contains(this->mousePosview)) {
 				this->mainmenu->buttoncheck(0);

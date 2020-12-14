@@ -58,6 +58,19 @@ Mainmenu::Mainmenu(float width, float height)
 
 	dietexture.loadFromFile("Cat/GameOver.png");
 	diespite.setTexture(this->dietexture);
+
+	onoffsoundt.loadFromFile("Cat/Void.png");
+	onoffsounds.setTexture(this->onoffsoundt);
+	onoffsounds.setScale(0.5f, 0.5f);
+	onoffsounds.setPosition(1100.f, 0.f);
+
+	soundoff.setSize(sf::Vector2f(50.f,50.f));
+	soundoff.setPosition(1110.f, 10.f);
+	soundoff.setFillColor(sf::Color::Transparent);
+
+	soundon.setSize(sf::Vector2f(50.f, 50.f));
+	soundon.setPosition(1210.f, 10.f);
+	soundon.setFillColor(sf::Color::Transparent);
 }
 
 Mainmenu::~Mainmenu()
@@ -74,6 +87,10 @@ void Mainmenu::draw(sf::RenderWindow& window)
 	for (int i = 0; i < MAX_NUMBER_OF_ITEMS; i++) {
 		window.draw(menu[i]);
 	}
+
+	window.draw(this->soundoff);
+	window.draw(this->soundon);
+	window.draw(this->onoffsounds);
 }
 
 void Mainmenu::drawscore(sf::RenderWindow& window)
@@ -149,6 +166,16 @@ const sf::FloatRect Mainmenu::nextgetbounds() const
 const sf::FloatRect Mainmenu::beforegetbounds() const
 {
 	return this->beforebuttonsprite.getGlobalBounds();
+}
+
+const sf::FloatRect Mainmenu::soundoffbound() const
+{
+	return this->soundoff.getGlobalBounds();
+}
+
+const sf::FloatRect Mainmenu::soundonbound() const
+{
+	return this->soundon.getGlobalBounds();
 }
 
 void Mainmenu::update()
