@@ -52,6 +52,9 @@ void Game::initGUI()
 
 	this->playerHpBarBack = this->playerHpBar;
 	this->playerHpBarBack.setFillColor(sf::Color(25, 25, 25, 200));
+
+	this->pic["EASTER"] = new sf::Texture();
+	this->pic["EASTER"]->loadFromFile("Cat/63010069.png");
 }
 
 void Game::initsystems()
@@ -194,10 +197,19 @@ void Game::run()
 		if (gamestate == 0) {
 			this->mainmenu->update();
 			this->mainmenu->draw(*this->window);
+
 			if (checkname && !(playstatus)) {
 				this->mainmenu->drawnamespace(*this->window);
 				playernametextbox.drawTo(*this->window);
 			}
+			if (this->mainmenu->easterbound().contains(this->mousePosview)) {
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Right)&&eastereggtimes.getElapsedTime().asSeconds()>5.f) {
+					this->easter_egg.push_back(new Pics(this->pic["EASTER"],760,720));
+					this->eastereggtimes.restart();
+				}
+			}
+			this->updateeasteregg();
+			this->mainmenu->drawpics(*this->window);
 			if (this->mainmenu->soundoffbound().contains(this->mousePosview)) {
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 					this->opensound = false;
@@ -679,6 +691,23 @@ void Game::updateGUI()
 	}
 	if (this->goldencattimes.getElapsedTime().asSeconds() > 10.f && goldencat == true) {
 		goldencat = false;
+	}
+}
+
+void Game::updateeasteregg()
+{
+	unsigned counters = 0;
+	for (auto* easter : this->easter_egg) {
+		easter->update();
+		if (easter->getBounds().top + easter->getBounds().height < 0.f) {
+			delete this->easter_egg.at(counters);
+			this->easter_egg.erase(this->easter_egg.begin() + counters);
+			--counters;
+		}
+		++counters;
+	}
+	for (auto* easter : this->easter_egg) {
+		easter->render(this->window);
 	}
 }
 

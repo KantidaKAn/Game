@@ -27,6 +27,9 @@ private:
 
 	sf::RectangleShape soundoff;
 	sf::RectangleShape soundon;
+
+	sf::Sprite Eastereggsprite;
+	sf::Texture Eastereggtextures;
 	bool playstate = false;
 	int pages = 0;
 
@@ -37,6 +40,7 @@ public:
 	void draw(sf::RenderWindow& window);
 	void drawscore(sf::RenderWindow& window);
 	void drawnamespace(sf::RenderWindow& window);
+	void drawpics(sf::RenderWindow& window);
 	void getplay(bool play);
 	void Moveup();
 	void Movedown();
@@ -51,6 +55,9 @@ public:
 
 	const sf::FloatRect soundoffbound() const;
 	const sf::FloatRect soundonbound() const;
+
+	const sf::FloatRect easterbound() const;
+
 	void update();
 	void howtoplay(sf::RenderWindow& window);
 	void nextpages();

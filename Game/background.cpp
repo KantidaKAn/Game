@@ -32,9 +32,9 @@ background::~background()
 
 void background::update()
 {
-	this->SpriteBG.move(-0.1f, 0.f);
-	this->positionBG.x -= 0.1f;
-	if (this->positionBG.x < -9187.5f)
+	this->SpriteBG.move(-1.f, 0.f);
+	this->positionBG.x -= 1.f;
+	if (this->positionBG.x <= -9187.5f)
 	{
 		this->positionBG.x = 0.0f;
 		this->SpriteBG.setPosition(this->positionBG);

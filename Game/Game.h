@@ -14,6 +14,7 @@
 #include<vector>
 #include<iostream>
 #include<SFML/Audio.hpp>
+#include"pics.h"
 
 
 using namespace std;
@@ -91,12 +92,15 @@ private:
 	sf::Clock randomskills;
 	sf::Clock Bigtimes;
 	sf::Clock goldencattimes;
+	sf::Clock eastereggtimes;
 
 	float plusSpeed=0.f;
 	float speeditem = 0.f;
 
 	//Resources
 	std::map <std::string, sf::Texture*>textures;
+	std::map<std::string, sf::Texture*> pic;
+	std::vector<Pics*> easter_egg;
 	std::vector<Enemy*> enemies;
 	std::vector<item*>ITEM;
 	//Function
@@ -130,6 +134,7 @@ public:
 	void update();
 	void updateEnemiesandcombat();
 	void updateGUI();
+	void updateeasteregg();
 
 	//render function
 	void renderPlayer();

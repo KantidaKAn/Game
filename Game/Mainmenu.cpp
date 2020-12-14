@@ -71,6 +71,10 @@ Mainmenu::Mainmenu(float width, float height)
 	soundon.setSize(sf::Vector2f(50.f, 50.f));
 	soundon.setPosition(1210.f, 10.f);
 	soundon.setFillColor(sf::Color::Transparent);
+
+	Eastereggtextures.loadFromFile("Cat/easteregg.png");
+	Eastereggsprite.setTexture(this->Eastereggtextures);
+	Eastereggsprite.setPosition(725.f,0.f);
 }
 
 Mainmenu::~Mainmenu()
@@ -87,10 +91,7 @@ void Mainmenu::draw(sf::RenderWindow& window)
 	for (int i = 0; i < MAX_NUMBER_OF_ITEMS; i++) {
 		window.draw(menu[i]);
 	}
-
-	window.draw(this->soundoff);
-	window.draw(this->soundon);
-	window.draw(this->onoffsounds);
+	//window.draw()
 }
 
 void Mainmenu::drawscore(sf::RenderWindow& window)
@@ -102,6 +103,14 @@ void Mainmenu::drawscore(sf::RenderWindow& window)
 void Mainmenu::drawnamespace(sf::RenderWindow& window)
 {
 	window.draw(namebuttonsprite);
+}
+
+void Mainmenu::drawpics(sf::RenderWindow& window)
+{
+	window.draw(this->Eastereggsprite);
+	window.draw(this->onoffsounds);
+	window.draw(this->soundoff);
+	window.draw(this->soundon);
 }
 
 void Mainmenu::getplay(bool play)
@@ -176,6 +185,11 @@ const sf::FloatRect Mainmenu::soundoffbound() const
 const sf::FloatRect Mainmenu::soundonbound() const
 {
 	return this->soundon.getGlobalBounds();
+}
+
+const sf::FloatRect Mainmenu::easterbound() const
+{
+	return this-> Eastereggsprite.getGlobalBounds();
 }
 
 void Mainmenu::update()
