@@ -104,7 +104,8 @@ private:
 	std::vector<Pics*> easter_egg;
 	std::map<std::string, sf::Texture*> pic2;
 	std::vector<Pics*> easter_egg2;
-
+	std::map<std::string, sf::Texture*> pic3;
+	std::vector<Pics*> easter_egg3;
 	std::vector<Enemy*> enemies;
 	std::vector<item*>ITEM;
 	//Function
