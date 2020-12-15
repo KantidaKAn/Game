@@ -64,6 +64,21 @@ void Game::initGUI()
 
 	this->pic4["EASTER4"] = new sf::Texture();
 	this->pic4["EASTER4"]->loadFromFile("Cat/pic4.png");
+	
+	this->pic5["EASTER5"] = new sf::Texture();
+	this->pic5["EASTER5"]->loadFromFile("Cat/pic5.png");
+
+	this->pic6["EASTER6"] = new sf::Texture();
+	this->pic6["EASTER6"]->loadFromFile("Cat/pic6.png");
+
+	this->pic7["EASTER7"] = new sf::Texture();
+	this->pic7["EASTER7"]->loadFromFile("Cat/pic7.png");
+
+	this->pic8["EASTER8"] = new sf::Texture();
+	this->pic8["EASTER8"]->loadFromFile("Cat/pic8.png");
+
+	this->pic9["EASTER9"] = new sf::Texture();
+	this->pic9["EASTER9"]->loadFromFile("Cat/pic9.png");
 }
 
 void Game::initsystems()
@@ -88,6 +103,8 @@ void Game::initsystems()
 	this->piwpiw.loadFromFile("Sound/piw.wav");
 	this->piw.setBuffer(this->piwpiw);
 
+	this->Gold.loadFromFile("Sound/bell.wav");
+	this->GoGo.setBuffer(this->Gold);
 
 	musicBG.openFromFile("Sound/Bongo cat.wav");
 	musicBG.setVolume(30);
@@ -187,6 +204,26 @@ Game::~Game()
 	{
 		delete i;
 	}
+	for (auto* i : this->easter_egg5)
+	{
+		delete i;
+	}
+	for (auto* i : this->easter_egg6)
+	{
+		delete i;
+	}
+	for (auto* i : this->easter_egg7)
+	{
+		delete i;
+	}
+	for (auto* i : this->easter_egg8)
+	{
+		delete i;
+	}
+	for (auto* i : this->easter_egg9)
+	{
+		delete i;
+	}
 }
 
 //run your game
@@ -255,7 +292,7 @@ void Game::run()
 
 			if (this->mainmenu->easterbound().contains(this->mousePosview)) {
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Right)&&eastereggtimes.getElapsedTime().asSeconds()>5.f) {
-					random = rand()%4+1;
+					random = rand()%9+1;
 					if (random == 1) {
 						this->easter_egg.push_back(new Pics(this->pic["EASTER"], 900, 720));
 						this->eastereggtimes.restart();
@@ -270,6 +307,26 @@ void Game::run()
 					}
 					else if (random == 4) {
 						this->easter_egg4.push_back(new Pics(this->pic4["EASTER4"], 820, 720));
+						this->eastereggtimes.restart();
+					}
+					else if (random == 5) {
+						this->easter_egg5.push_back(new Pics(this->pic5["EASTER5"], 900, 720));
+						this->eastereggtimes.restart();
+					}
+					else if (random == 6) {
+						this->easter_egg6.push_back(new Pics(this->pic6["EASTER6"], 900, 720));
+						this->eastereggtimes.restart();
+					}
+					else if (random == 7) {
+						this->easter_egg7.push_back(new Pics(this->pic7["EASTER7"], 900, 720));
+						this->eastereggtimes.restart();
+					}
+					else if (random == 8) {
+						this->easter_egg8.push_back(new Pics(this->pic8["EASTER8"], 900, 720));
+						this->eastereggtimes.restart();
+					}
+					else if (random == 9) {
+						this->easter_egg9.push_back(new Pics(this->pic9["EASTER9"], 900, 720));
 						this->eastereggtimes.restart();
 					}
 				}
@@ -567,6 +624,7 @@ void Game::updateItem()
 		}
 		if (this->player->getBounds().intersects(this->ITEM[i]->getBounds()) && this->ITEM[i]->gettype() == 4)
 		{
+			this->GoGo.play();
 			this->pointed += 10;
 			this->bloodcount++;
 			this->ITEM.erase(this->ITEM.begin() + i);
@@ -819,6 +877,72 @@ void Game::updateeasteregg()
 	for (auto* easter4 : this->easter_egg4) {
 		easter4->render(this->window);
 	}
+	unsigned counters5 = 0;
+	for (auto* easter5 : this->easter_egg5) {
+		easter5->update();
+		if (easter5->getBounds().top + easter5->getBounds().height < 0.f) {
+			delete this->easter_egg5.at(counters5);
+			this->easter_egg5.erase(this->easter_egg5.begin() + counters5);
+			--counters5;
+		}
+		++counters5;
+	}
+	for (auto* easter5 : this->easter_egg5) {
+		easter5->render(this->window);
+	}
+	unsigned counters6 = 0;
+	for (auto* easter6 : this->easter_egg6) {
+		easter6->update();
+		if (easter6->getBounds().top + easter6->getBounds().height < 0.f) {
+			delete this->easter_egg6.at(counters6);
+			this->easter_egg6.erase(this->easter_egg6.begin() + counters6);
+			--counters6;
+		}
+		++counters6;
+	}
+	for (auto* easter6 : this->easter_egg6) {
+		easter6->render(this->window);
+	}
+	unsigned counters7 = 0;
+	for (auto* easter7 : this->easter_egg7) {
+		easter7->update();
+		if (easter7->getBounds().top + easter7->getBounds().height < 0.f) {
+			delete this->easter_egg7.at(counters7);
+			this->easter_egg7.erase(this->easter_egg7.begin() + counters7);
+			--counters7;
+		}
+		++counters7;
+	}
+	for (auto* easter7 : this->easter_egg7) {
+		easter7->render(this->window);
+	}
+	unsigned counters8 = 0;
+	for (auto* easter8 : this->easter_egg8) {
+		easter8->update();
+		if (easter8->getBounds().top + easter8->getBounds().height < 0.f) {
+			delete this->easter_egg8.at(counters8);
+			this->easter_egg8.erase(this->easter_egg8.begin() + counters8);
+			--counters8;
+		}
+		++counters8;
+	}
+	for (auto* easter8 : this->easter_egg8) {
+		easter8->render(this->window);
+	}
+	unsigned counters9 = 0;
+	for (auto* easter9 : this->easter_egg9) {
+		easter9->update();
+		if (easter9->getBounds().top + easter9->getBounds().height < 0.f) {
+			delete this->easter_egg9.at(counters5);
+			this->easter_egg9.erase(this->easter_egg9.begin() + counters9);
+			--counters9;
+		}
+		++counters9;
+	}
+	for (auto* easter9 : this->easter_egg9) {
+		easter9->render(this->window);
+	}
+
 }
 
 //render player

@@ -62,7 +62,7 @@ Mainmenu::Mainmenu(float width, float height)
 	onoffsoundt.loadFromFile("Cat/Void.png");
 	onoffsounds.setTexture(this->onoffsoundt);
 	onoffsounds.setScale(0.5f, 0.5f);
-	onoffsounds.setPosition(1100.f, 0.f);
+	onoffsounds.setPosition(10.f, 0.f);
 
 	soundoff.setSize(sf::Vector2f(50.f,50.f));
 	soundoff.setPosition(1110.f, 10.f);

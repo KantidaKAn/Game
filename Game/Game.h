@@ -82,6 +82,8 @@ private:
 	sf::Sound blood;
 	sf::SoundBuffer piwpiw;
 	sf::Sound piw;
+	sf::SoundBuffer Gold;
+	sf::Sound GoGo;
 
 	sf::Clock deadtimes;
 	sf::Clock nextpage;
@@ -108,6 +110,16 @@ private:
 	std::vector<Pics*> easter_egg3;
 	std::map<std::string, sf::Texture*> pic4;
 	std::vector<Pics*> easter_egg4;
+	std::map<std::string, sf::Texture*> pic5;
+	std::vector<Pics*> easter_egg5;
+	std::map<std::string, sf::Texture*> pic6;
+	std::vector<Pics*> easter_egg6;
+	std::map<std::string, sf::Texture*> pic7;
+	std::vector<Pics*> easter_egg7;
+	std::map<std::string, sf::Texture*> pic8;
+	std::vector<Pics*> easter_egg8;
+	std::map<std::string, sf::Texture*> pic9;
+	std::vector<Pics*> easter_egg9;
 	std::vector<Enemy*> enemies;
 	std::vector<item*>ITEM;
 	//Function
