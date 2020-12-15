@@ -65,11 +65,11 @@ Mainmenu::Mainmenu(float width, float height)
 	onoffsounds.setPosition(10.f, 0.f);
 
 	soundoff.setSize(sf::Vector2f(50.f,50.f));
-	soundoff.setPosition(1110.f, 10.f);
+	soundoff.setPosition(10.f, 10.f);
 	soundoff.setFillColor(sf::Color::Transparent);
 
 	soundon.setSize(sf::Vector2f(50.f, 50.f));
-	soundon.setPosition(1210.f, 10.f);
+	soundon.setPosition(100.f, 10.f);
 	soundon.setFillColor(sf::Color::Transparent);
 
 	Eastereggtextures.loadFromFile("Cat/easteregg.png");
