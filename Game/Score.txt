@@ -1,5 +1,5 @@
-gg 945
-; 912
-l 558
-la 501
-go 432
+Kan 1000
+Cat 800
+Kan 775
+Garfield 600
+Percia 400
